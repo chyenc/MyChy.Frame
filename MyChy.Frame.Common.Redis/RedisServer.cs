@@ -6,19 +6,24 @@ namespace MyChy.Frame.Common.Redis
 {
     public class RedisServer
     {
-        private static readonly bool IsCache = WebConfig.AppSettingsName<bool>("RedisIsCache", false);
-
-        private static readonly string RedisName = WebConfig.AppSettingsName<string>("RedisName", "MyChy");
-
-        private static readonly int CacheSeconds = WebConfig.AppSettingsName<int>("RedisCacheSeconds", 600);
+        private static readonly RedisConfig Config = null;
 
         private static bool _isCacheError = false;
 
-        private static readonly string Constr = WebConfig.AppSettingsName<string>("RedisConnect");
-
-        private static readonly Lazy<ConnectionMultiplexer> LazyConnection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(Constr));
+        private static readonly Lazy<ConnectionMultiplexer> LazyConnection = 
+            new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(Config.Connect));
 
         private static ConnectionMultiplexer Redis => LazyConnection.Value;
+
+        static RedisServer()
+        {
+            if (Config != null) return;
+            Config = CfgConfig.Reader<RedisConfig>("config/redis.cfg", "redis");
+            if (string.IsNullOrEmpty(Config?.Connect))
+            {
+                Config = new RedisConfig {IsCache = false};
+            }
+        }
 
         //private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
         //{
@@ -58,11 +63,11 @@ namespace MyChy.Frame.Common.Redis
         /// <returns></returns>
         public static T GetCache<T>(string cacheKey)
         {
-            if (IsCache && !_isCacheError)
+            if (Config.IsCache && !_isCacheError)
             {
                 var redisdb = Redis.GetDatabase();
                 if (_isCacheError) return default(T);
-                var obj = redisdb.StringGet(RedisName+cacheKey);
+                var obj = redisdb.StringGet(Config.Name +cacheKey);
                 return SerializeHelper.StringToObj<T>(obj);
             }
             else
@@ -77,18 +82,18 @@ namespace MyChy.Frame.Common.Redis
 
         public static void Remove(string cacheKey)
         {
-            if (!IsCache || _isCacheError) return;
+            if (!Config.IsCache || _isCacheError) return;
             var redisdb = GetDatabase();
             if (_isCacheError) return;
-            redisdb.KeyDelete(RedisName + cacheKey);
+            redisdb.KeyDelete(Config.Name + cacheKey);
         }
 
         public static void RemoveAsync(string cacheKey)
         {
-            if (!IsCache || _isCacheError) return;
+            if (!Config.IsCache || _isCacheError) return;
             var redisdb = GetDatabase();
             if (_isCacheError) return;
-            redisdb.KeyDeleteAsync(RedisName + cacheKey);
+            redisdb.KeyDeleteAsync(Config.Name + cacheKey);
 
         }
 
@@ -103,7 +108,7 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="objObject">数据</param>
         public static void SetCache(string cacheKey, object objObject)
         {
-            var time = DateTime.Now.AddSeconds(CacheSeconds);
+            var time = DateTime.Now.AddSeconds(Config.CacheSeconds);
             SetCache(cacheKey, objObject, time);
         }
 
@@ -115,7 +120,7 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="seconds">秒</param>
         public static void SetCache(string cacheKey, object objObject, int seconds)
         {
-            var time = DateTime.Now.AddSeconds((double)seconds);
+            var time = DateTime.Now.AddSeconds(seconds);
             SetCache(cacheKey, objObject, time);
         }
 
@@ -127,12 +132,12 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="time"></param>
         public static void SetCache(string cacheKey, object objObject, DateTime time)
         {
-            if (!IsCache || _isCacheError) return;
+            if (!Config.IsCache || _isCacheError) return;
             var redisdb = GetDatabase();
             var obj = SerializeHelper.ObjToString(objObject);
             var ts = DateTime.Now.Subtract(time).Duration();
             if (_isCacheError) return;
-            redisdb.StringSet(RedisName + cacheKey, obj, ts);
+            redisdb.StringSet(Config.Name + cacheKey, obj, ts);
         }
 
         #endregion
@@ -147,7 +152,7 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="objObject">数据</param>
         public static void SetCacheAsync(string cacheKey, object objObject)
         {
-            var time = DateTime.Now.AddSeconds(CacheSeconds);
+            var time = DateTime.Now.AddSeconds(Config.CacheSeconds);
             SetCacheAsync(cacheKey, objObject, time);
         }
 
@@ -157,9 +162,9 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="cacheKey">KEY</param>
         /// <param name="objObject">数据</param>
         /// <param name="seconds">秒</param>
-        public static void SetCacheAsync(string cacheKey, object objObject, int seconds)
+        public static void SetCacheAsync(string cacheKey, object objObject, double seconds)
         {
-            var time = DateTime.Now.AddSeconds((double)seconds);
+            var time = DateTime.Now.AddSeconds(seconds);
             SetCacheAsync(cacheKey, objObject, time);
         }
 
@@ -171,12 +176,12 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="time"></param>
         public static void SetCacheAsync(string cacheKey, object objObject, DateTime time)
         {
-            if (!IsCache || _isCacheError) return;
+            if (!Config.IsCache || _isCacheError) return;
             var redisdb = GetDatabase();
             var obj = SerializeHelper.ObjToString(objObject);
             var ts = DateTime.Now.Subtract(time).Duration();
             if (_isCacheError) return;
-            redisdb.StringSetAsync(RedisName + cacheKey, obj, ts);
+            redisdb.StringSetAsync(Config.Name + cacheKey, obj, ts);
         }
 
         #endregion
@@ -185,16 +190,28 @@ namespace MyChy.Frame.Common.Redis
         #region 原子计数器
 
         /// <summary>
-        /// 原子加计数器 第一次赋值后cardinal 管用
+        /// 原子加计数器 
         /// </summary>
         /// <param name="key"></param>
         /// <param name="cardinal"></param>
         /// <returns></returns>
         public static long Increment(string key, long cardinal)
         {
-            if (!IsCache || _isCacheError) return -1;
+            if (!Config.IsCache || _isCacheError) return -1;
             var redisdb = Redis.GetDatabase();
-            return _isCacheError ? -1 : redisdb.StringIncrement(RedisName + key, cardinal);
+            return _isCacheError ? -1 : redisdb.StringIncrement(Config.Name + key, cardinal);
+        }
+
+        /// <summary>
+        /// 原子加计数器
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static long Increment(string key)
+        {
+            if (!Config.IsCache || _isCacheError) return -1;
+            var redisdb = Redis.GetDatabase();
+            return _isCacheError ? -1 : redisdb.StringIncrement(Config.Name + key);
         }
 
         /// <summary>
@@ -205,9 +222,21 @@ namespace MyChy.Frame.Common.Redis
         /// <returns></returns>
         public static long Decrement(string key, long cardinal)
         {
-            if (!IsCache || _isCacheError) return 0;
+            if (!Config.IsCache || _isCacheError) return 0;
             var redisdb = Redis.GetDatabase();
-            return _isCacheError ? 0 : redisdb.StringDecrement(RedisName + key, cardinal);
+            return _isCacheError ? 0 : redisdb.StringDecrement(Config.Name + key, cardinal);
+        }
+
+        /// <summary>
+        /// 原子减计数器
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static long Decrement(string key)
+        {
+            if (!Config.IsCache || _isCacheError) return 0;
+            var redisdb = Redis.GetDatabase();
+            return _isCacheError ? 0 : redisdb.StringDecrement(Config.Name + key);
         }
 
         #endregion

@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DBConfig.cs" />
+    <Compile Include="Helper\CfgConfig.cs" />
     <Compile Include="Helper\DayTimeHelper.cs" />
     <Compile Include="Helper\EnumExtensions.cs" />
     <Compile Include="Helper\IOFiles.cs" />
@@ -55,6 +56,10 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpConfig, Version=1.4.4.0, Culture=neutral, PublicKeyToken=c1deedac91bd7724, processorArchitecture=MSIL">
+      <HintPath>..\packages\sharpconfig.1.4.4\lib\net20\SharpConfig.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
