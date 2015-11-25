@@ -13,11 +13,12 @@ namespace MyChy.Frame.Common
     public static class ObjectExtension
     {
         private static readonly Type ValueTypeType = typeof(ValueType);
+
         /// <summary>
         /// 根据类型 名称 获取context值
         /// </summary>
         /// <param name="ty">类型</param>
-        /// <param name="name">名称</param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public static object GetValueByType(Type ty, object value)
         {
@@ -25,7 +26,7 @@ namespace MyChy.Frame.Common
             {
                 try
                 {
-                    object result = new object();
+                    object result;
 
                     if (ty.Name == "String" || ty.Name == "StringBuilder")
                     {
@@ -38,9 +39,8 @@ namespace MyChy.Frame.Common
                             ty = typeof(int);
                         }
 
-                        string Objvalue = string.Empty;
-                        Objvalue = string.Format("\"{0}\"", value);
-                        result = JsonConvert.DeserializeObject(Objvalue, ty);
+                        var objvalue = string.Format("\"{0}\"", value);
+                        result = JsonConvert.DeserializeObject(objvalue, ty);
                     }
                     return result;
                 }
@@ -62,12 +62,8 @@ namespace MyChy.Frame.Common
         public static object GetPropertyValue(this object obj, string propertyName)
         {
             var propertyInfo = obj.GetType().GetProperty(propertyName);
-            if (propertyInfo != null)
-            {
-                var propertyValue = propertyInfo.GetValue(obj, null);
-                return propertyValue;
-            }
-            return null;
+            var propertyValue = propertyInfo?.GetValue(obj, null);
+            return propertyValue;
         }
 
         /// <summary>
