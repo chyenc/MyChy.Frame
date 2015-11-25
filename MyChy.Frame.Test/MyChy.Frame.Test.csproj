@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config\redis.cfg" />
+    <None Include="config\WebCache.cfg" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
