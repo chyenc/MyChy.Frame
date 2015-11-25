@@ -314,7 +314,7 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static byte[] RedFile(string file)
         {
-            var filePath = IOFiles.GetFileMapPath(file);
+            var filePath = IoFiles.GetFileMapPath(file);
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             var buffer = new byte[fileStream.Length];
             fileStream.Read(buffer, 0, buffer.Length);

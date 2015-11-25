@@ -8,7 +8,7 @@ using System.Web;
 
 namespace MyChy.Frame.Common.Helper
 {
-    public sealed class IOFiles
+    public sealed class IoFiles
     {
         /// <summary>
         /// 判断这个文件夹是否存在
