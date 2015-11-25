@@ -9,5 +9,6 @@ namespace MyChy.Frame.Test
     public class Class1
     {
         //ceshi xiug 
+        //
     }
 }
