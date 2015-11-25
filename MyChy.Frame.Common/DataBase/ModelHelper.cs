@@ -62,7 +62,6 @@ namespace MyChy.Frame.Common.DataBase
                     }
                 }
                 WebCache.SetCache(t.FullName, list, 60);
-
             }
 
 

@@ -15,6 +15,13 @@ namespace MyChy.Frame.Common.DataBase
     /// </summary>
     public class DataHelperBase
     {
+        /// <summary>
+        /// 执行DbCommand 返回list类
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
         public static IList<T> GetListEntity<T>(Database db, DbCommand cmd)
         {
             using (DataSet ds = db.ExecuteDataSet(cmd))
@@ -23,6 +30,13 @@ namespace MyChy.Frame.Common.DataBase
             }
         }
 
+        /// <summary>
+        /// 执行DbCommand 返回类
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
         public static T GetEntity<T>(Database db, DbCommand cmd)
         {
             using (DataSet ds = db.ExecuteDataSet(cmd))
@@ -31,68 +45,127 @@ namespace MyChy.Frame.Common.DataBase
             }
         }
 
-
-        public static IList<T> GetListEntity<T>(Database db, string Sqltxt)
+        /// <summary>
+        /// 执行sqltxt 返回list类
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <returns></returns>
+        public static IList<T> GetListEntity<T>(Database db, string sqltxt)
         {
-            return GetListEntity<T>(db, Sqltxt, null);
+            return GetListEntity<T>(db, sqltxt, null);
         }
 
-        public static T GetEntity<T>(Database db, string Sqltxt)
+        /// <summary>
+        /// 执行sqltxt 返回类
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <returns></returns>
+        public static T GetEntity<T>(Database db, string sqltxt)
         {
-            return GetEntity<T>(db, Sqltxt, null);
+            return GetEntity<T>(db, sqltxt, null);
         }
 
-        public static IList<T> GetListEntity<T>(Database db, string Sqltxt, SqlParameter[] parms)
+        /// <summary>
+        /// 执行sqltxt 返回list类 带参数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <param name="parms"></param>
+        /// <returns></returns>
+        public static IList<T> GetListEntity<T>(Database db, string sqltxt, SqlParameter[] parms)
         {
-            DataTable da = GetDataTable(db, Sqltxt, parms);
+            var da = GetDataTable(db, sqltxt, parms);
             return ModelHelper.GetListModelByTable<T>(da);
         }
 
-        public static T GetEntity<T>(Database db, string Sqltxt, SqlParameter[] parms)
+        /// <summary>
+        /// 执行sqltxt 返回类 带参数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <param name="parms"></param>
+        /// <returns></returns>
+        public static T GetEntity<T>(Database db, string sqltxt, SqlParameter[] parms)
         {
-            DataTable da = GetDataTable(db, Sqltxt, parms);
+            var da = GetDataTable(db, sqltxt, parms);
             return ModelHelper.GetModelByTable<T>(da);
         }
 
-        public static DataTable GetDataTable(Database Db, string Sqltxt, SqlParameter[] parms)
+        /// <summary>
+        /// 执行sqltxt 返回Table
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <param name="parms"></param>
+        /// <returns></returns>
+        public static DataTable GetDataTable(Database db, string sqltxt, SqlParameter[] parms)
         {
             DataTable data = null;
-            DataSet Set = GetDataSet(Db, Sqltxt, parms);
-            if (Set != null && Set.Tables.Count > 0)
+            var set = GetDataSet(db, sqltxt, parms);
+            if (set != null && set.Tables.Count > 0)
             {
-                data = Set.Tables[0];
+                data = set.Tables[0];
             }
             return data;
         }
 
-        public static DataSet GetDataSet(Database Db, string Sqltxt, SqlParameter[] parms)
+        /// <summary>
+        /// 执行sqltxt 返回DataSet
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <param name="parms"></param>
+        /// <returns></returns>
+        public static DataSet GetDataSet(Database db, string sqltxt, SqlParameter[] parms)
         {
-            DataSet ds = new DataSet();
-            using (DbCommand cmd = Db.GetSqlStringCommand(Sqltxt))
+            DataSet ds;
+            using (DbCommand cmd = db.GetSqlStringCommand(sqltxt))
             {
                 if (parms != null)
                 {
                     foreach (var i in parms)
                     {
-                        Db.AddInParameter(cmd, i.ParameterName, i.DbType, i.Value);
+                        db.AddInParameter(cmd, i.ParameterName, i.DbType, i.Value);
                     }
                 }
-                ds = Db.ExecuteDataSet(cmd);
+                ds = db.ExecuteDataSet(cmd);
             }
             return ds;
         }
 
-
-        public static T ExecuteScalar<T>(Database Db, string Sqltxt, T def)
+        /// <summary>
+        ///  执行sqltxt 返回Scalar
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static T ExecuteScalar<T>(Database db, string sqltxt, T def)
         {
-            return ExecuteScalar<T>(Db, Sqltxt, null, def);
+            return ExecuteScalar<T>(db, sqltxt, null, def);
         }
 
-        public static T ExecuteScalar<T>(Database Db, string Sqltxt, SqlParameter[] parms, T def)
+        /// <summary>
+        /// 执行sqltxt 返回Scalar 返回默认值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <param name="parms"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static T ExecuteScalar<T>(Database db, string sqltxt, SqlParameter[] parms, T def)
         {
 
             object obj = null;
-            using (DbCommand cmd = Db.GetSqlStringCommand(Sqltxt))
+            using (DbCommand cmd = db.GetSqlStringCommand(sqltxt))
             {
                 if (parms != null)
                 {
@@ -100,35 +173,46 @@ namespace MyChy.Frame.Common.DataBase
                     {
                         if (i.Value != null)
                         {
-                            Db.AddInParameter(cmd, i.ParameterName, i.DbType, i.Value);
+                            db.AddInParameter(cmd, i.ParameterName, i.DbType, i.Value);
                         }
                     }
                 }
-                obj = Db.ExecuteScalar(cmd);
+                obj = db.ExecuteScalar(cmd);
             }
             return obj.To<T>(def);
         }
 
-        public static int ExecuteNonQuery(Database Db, string Sqltxt)
+        /// <summary>
+        /// 执行sqltxt 返回NonQuery
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <returns></returns>
+        public static int ExecuteNonQuery(Database db, string sqltxt)
         {
-            return ExecuteNonQuery(Db, Sqltxt, null);
+            return ExecuteNonQuery(db, sqltxt, null);
         }
 
-        public static int ExecuteNonQuery(Database Db, string Sqltxt, SqlParameter[] parms)
+        /// <summary>
+        /// 执行sqltxt 返回NonQuery  带参数
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="sqltxt"></param>
+        /// <param name="parms"></param>
+        /// <returns></returns>
+        public static int ExecuteNonQuery(Database db, string sqltxt, SqlParameter[] parms)
         {
-            using (DbCommand cmd = Db.GetSqlStringCommand(Sqltxt))
+            using (DbCommand cmd = db.GetSqlStringCommand(sqltxt))
             {
-                if (parms != null)
+                if (parms == null) return db.ExecuteNonQuery(cmd);
+                foreach (var i in parms)
                 {
-                    foreach (var i in parms)
+                    if (i.Value != null)
                     {
-                        if (i.Value != null)
-                        {
-                            Db.AddInParameter(cmd, i.ParameterName, i.DbType, i.Value);
-                        }
+                        db.AddInParameter(cmd, i.ParameterName, i.DbType, i.Value);
                     }
                 }
-                return Db.ExecuteNonQuery(cmd);
+                return db.ExecuteNonQuery(cmd);
             }
         }
     }

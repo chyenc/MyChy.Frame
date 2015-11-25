@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyChy.Frame.Common.Redis
 {
-    public class RedisConfig
+    internal class RedisConfig
     {
         public bool IsCache { get; set; }
 

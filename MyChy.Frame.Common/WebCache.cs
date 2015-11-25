@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using MyChy.Frame.Common.Helper;
+using MyChy.Frame.Common.Model;
 
 namespace MyChy.Frame.Common
 {
@@ -13,9 +15,17 @@ namespace MyChy.Frame.Common
     /// </summary>
     public static class WebCache
     {
+        private static readonly WebCacheConfig Config = null;
 
-        public static readonly bool IsCache = ConfigurationManager.AppSettings["CacheEnable"].To<bool>(false);
-        private static readonly int CacheTime = ConfigurationManager.AppSettings["CacheTime"].To<int>(10);
+        static WebCache()
+        {
+            if (Config != null) return;
+            Config = CfgConfig.Reader<WebCacheConfig>("config/WebCache.cfg", "Cache");
+            if (Config?.CacheMinute==0)
+            {
+                Config = new WebCacheConfig { IsCache = false };
+            }
+        }
 
         /// <summary>
         /// 获取缓存
@@ -24,17 +34,10 @@ namespace MyChy.Frame.Common
         /// <returns></returns>
         public static T GetCache<T>(string cacheKey)
         {
-            if (IsCache)
-            {
-                var objCache = HttpRuntime.Cache;
-                var obj = objCache[cacheKey];
-                return StringToObj<T>(obj);
-            }
-            else
-            {
-                return default(T);
-            }
-
+            if (!Config.IsCache) return default(T);
+            var objCache = HttpRuntime.Cache;
+            var obj = objCache[cacheKey];
+            return StringToObj<T>(obj);
         }
 
 
@@ -45,7 +48,7 @@ namespace MyChy.Frame.Common
         /// <param name="objObject">数据</param>
         public static void SetCache(string cacheKey, object objObject)
         {
-            var time = DateTime.Now.AddMinutes((double)CacheTime);
+            var time = DateTime.Now.AddMinutes(Config.CacheMinute);
             SetCache(cacheKey, objObject, time);
         }
 
@@ -81,7 +84,7 @@ namespace MyChy.Frame.Common
         /// <param name="cacheKey"></param>
         public static void Remove(string cacheKey)
         {
-            if (!IsCache) return;
+            if (!Config.IsCache) return;
             var objCache = HttpRuntime.Cache;
             objCache.Remove(cacheKey);
         }
@@ -97,7 +100,7 @@ namespace MyChy.Frame.Common
         /// <param name="time"></param>
         private static void SetCache(string cacheKey, object objObject, DateTime time)
         {
-            if (!IsCache) return;
+            if (!Config.IsCache) return;
             if (objObject == null) return;
             var objCache = HttpRuntime.Cache;
             objCache.Insert(cacheKey, objObject, null, time, TimeSpan.Zero);
