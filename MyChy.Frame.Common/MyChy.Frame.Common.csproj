@@ -39,6 +39,7 @@
     <Compile Include="DataBase\ModelHelper.cs" />
     <Compile Include="DBConfig.cs" />
     <Compile Include="Helper\CfgConfig.cs" />
+    <Compile Include="Helper\CookieHelper.cs" />
     <Compile Include="Helper\DayTimeHelper.cs" />
     <Compile Include="Helper\EnumExtensions.cs" />
     <Compile Include="Helper\IOFiles.cs" />
