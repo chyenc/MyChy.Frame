@@ -35,8 +35,6 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DataBase\DataHelperBase.cs" />
-    <Compile Include="DataBase\ModelHelper.cs" />
     <Compile Include="Helper\CfgConfig.cs" />
     <Compile Include="Helper\CookieHelper.cs" />
     <Compile Include="Helper\DayTimeHelper.cs" />
