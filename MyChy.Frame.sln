@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyChy.Frame", "MyChy.Frame\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyChy.Frame.Test", "MyChy.Frame.Test\MyChy.Frame.Test.csproj", "{831FEFCB-45DA-46AB-A193-4008621CDC6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyChy.Frame.Common.Data", "MyChy.Frame.Common.Data\MyChy.Frame.Common.Data.csproj", "{D062A5BD-1A21-4444-8028-436588252D78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,12 +35,16 @@ Global
 		{831FEFCB-45DA-46AB-A193-4008621CDC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{831FEFCB-45DA-46AB-A193-4008621CDC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{831FEFCB-45DA-46AB-A193-4008621CDC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D062A5BD-1A21-4444-8028-436588252D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D062A5BD-1A21-4444-8028-436588252D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D062A5BD-1A21-4444-8028-436588252D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D062A5BD-1A21-4444-8028-436588252D78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPath = packages\EnterpriseLibrary.Data.5.0.505.0\lib\NET35;packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.0\lib\NET35;packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\EnterpriseLibrary.Data.5.0.505.0\lib\NET35;packages\Unity.2.1.505.0\lib\NET35;packages\Unity.Interception.2.1.505.0\lib\NET35;packages\EnterpriseLibrary.Common.5.0.505.0\lib\NET35
 	EndGlobalSection
 EndGlobal

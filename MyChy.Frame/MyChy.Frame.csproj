@@ -43,6 +43,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MyChy.Frame.Common.Data\MyChy.Frame.Common.Data.csproj">
+      <Project>{d062a5bd-1a21-4444-8028-436588252d78}</Project>
+      <Name>MyChy.Frame.Common.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyChy.Frame.Common.Redis\MyChy.Frame.Common.Redis.csproj">
       <Project>{997f9127-4fab-43cf-aa63-9c8ec1e6f929}</Project>
       <Name>MyChy.Frame.Common.Redis</Name>
