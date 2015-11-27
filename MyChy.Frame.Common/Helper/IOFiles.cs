@@ -263,8 +263,8 @@ namespace MyChy.Frame.Common.Helper
         /// <param name="file"></param>
         public static string GetFileMapPath(string file)
         {
-            HttpContext context = HttpContext.Current;
-            string filename = string.Empty;
+            var context = HttpContext.Current;
+            string filename;
             if (context != null)
             {
                 filename = context.Server.MapPath(file);
@@ -288,8 +288,9 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static string GetFolderMapPath(string file)
         {
-            HttpContext context = HttpContext.Current;
-            string filename = string.Empty;
+            var context = HttpContext.Current;
+            string filename;
+            if (IsMap(file)) return file;
 
             if (context != null)
             {
@@ -307,19 +308,14 @@ namespace MyChy.Frame.Common.Helper
         }
 
         /// <summary>
-        /// 是否为物理地址
+        /// 是否为物理地址 真物理目录
         /// </summary>
-        /// <param name="Files"></param>
+        /// <param name="files"></param>
         /// <returns></returns>
-        public static bool IsMap(string Files)
+        public static bool IsMap(string files)
         {
-            Files = Files.Replace("//", ":");
-            if (Files.IndexOf(':') > 0)
-            {
-                return true;
-            }
-            return false;
-
+            files = files.Replace("//", ":");
+            return files.IndexOf(':') > 0;
         }
 
 

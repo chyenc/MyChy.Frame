@@ -18,9 +18,18 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static T Reader<T>(string file, string section) where T : class
         {
-            var config = Configuration.LoadFromFile(file);
-            var sections = config[section];
-            return sections==null ? default(T) : config[section].CreateObject<T>();
+            try
+            {
+                var files = IoFiles.GetFileMapPath(file);
+                var config = Configuration.LoadFromFile(files);
+                var sections = config[section];
+                return sections == null ? default(T) : config[section].CreateObject<T>();
+            }
+            catch (Exception exception)
+            {
+                LogHelper.Log(exception);
+            }
+            return null;
         }
 
         /// <summary>

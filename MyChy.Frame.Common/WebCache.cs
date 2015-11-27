@@ -21,7 +21,7 @@ namespace MyChy.Frame.Common
         {
             if (Config != null) return;
             Config = CfgConfig.Reader<WebCacheConfig>("config/WebCache.cfg", "Cache");
-            if (Config?.CacheMinute==0)
+            if (Config==null||Config.CacheMinute==0)
             {
                 Config = new WebCacheConfig { IsCache = false };
             }
