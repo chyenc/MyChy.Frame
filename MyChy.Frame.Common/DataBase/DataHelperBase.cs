@@ -24,7 +24,7 @@ namespace MyChy.Frame.Common.DataBase
         /// <returns></returns>
         public static IList<T> GetListEntity<T>(Database db, DbCommand cmd)
         {
-            using (DataSet ds = db.ExecuteDataSet(cmd))
+            using (var ds = db.ExecuteDataSet(cmd))
             {
                 return ModelHelper.GetListModelByTable<T>(ds.Tables[0]);
             }
@@ -39,7 +39,7 @@ namespace MyChy.Frame.Common.DataBase
         /// <returns></returns>
         public static T GetEntity<T>(Database db, DbCommand cmd)
         {
-            using (DataSet ds = db.ExecuteDataSet(cmd))
+            using (var ds = db.ExecuteDataSet(cmd))
             {
                 return ModelHelper.GetModelByTable<T>(ds.Tables[0]);
             }
@@ -125,7 +125,7 @@ namespace MyChy.Frame.Common.DataBase
         public static DataSet GetDataSet(Database db, string sqltxt, SqlParameter[] parms)
         {
             DataSet ds;
-            using (DbCommand cmd = db.GetSqlStringCommand(sqltxt))
+            using (var cmd = db.GetSqlStringCommand(sqltxt))
             {
                 if (parms != null)
                 {
@@ -165,7 +165,7 @@ namespace MyChy.Frame.Common.DataBase
         {
 
             object obj = null;
-            using (DbCommand cmd = db.GetSqlStringCommand(sqltxt))
+            using (var cmd = db.GetSqlStringCommand(sqltxt))
             {
                 if (parms != null)
                 {
@@ -202,7 +202,7 @@ namespace MyChy.Frame.Common.DataBase
         /// <returns></returns>
         public static int ExecuteNonQuery(Database db, string sqltxt, SqlParameter[] parms)
         {
-            using (DbCommand cmd = db.GetSqlStringCommand(sqltxt))
+            using (var cmd = db.GetSqlStringCommand(sqltxt))
             {
                 if (parms == null) return db.ExecuteNonQuery(cmd);
                 foreach (var i in parms)

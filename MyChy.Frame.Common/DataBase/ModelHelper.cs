@@ -101,7 +101,7 @@ namespace MyChy.Frame.Common.DataBase
             }
             var t = typeof(T);
             var pi = t.GetProperties();
-            foreach (PropertyInfo item in pi)
+            foreach (var item in pi)
             {
                 result.Columns.Add(new DataColumn(item.Name, item.PropertyType));
             }

@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MyChy.Frame.Common.Helper;
 using Newtonsoft.Json;
-using Formatting = System.Xml.Formatting;
 
 namespace MyChy.Frame.Common.Redis
 {

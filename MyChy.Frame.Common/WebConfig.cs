@@ -26,6 +26,10 @@ namespace MyChy.Frame.Common
             return ConfigurationManager.AppSettings[strSettingName].To<T>();
         }
 
+        public static string CdnServer = AppSettingsName<string>("CdnServer");
+
+        public static string ImageServer = AppSettingsName<string>("ImageServer");
+
 
     }
 }

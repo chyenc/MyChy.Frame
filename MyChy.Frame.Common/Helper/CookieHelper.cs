@@ -9,12 +9,12 @@ namespace MyChy.Frame.Common.Helper
 {
     public static class CookieHelper
     {
+        private static readonly string Des3Key = WebConfig.AppSettingsName<string>("CookieHelperKey", "dtvb^*3e");
+
         static CookieHelper()
         {
 
         }
-
-        private static readonly string Des3Key = WebConfig.AppSettingsName<string>("CookieHelperKey", "dtvb^*3e");
 
         /// <summary>
         /// 设置Cookie

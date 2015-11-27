@@ -13,7 +13,7 @@ namespace MyChy.Frame.Common
     {
 
         //默认密钥向量
-        private static readonly byte[] RgbIv = new byte[] { 0x33, 0x34, 0x51, 120, 0x90, 0x3b, 0xcd, 0x1f };
+        private static readonly byte[] RgbIv = { 0x33, 0x34, 0x51, 120, 0x90, 0x3b, 0xcd, 0x1f };
 
         /// <summary>
         /// DES加密字符串

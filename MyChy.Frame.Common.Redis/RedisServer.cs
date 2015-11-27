@@ -10,7 +10,7 @@ namespace MyChy.Frame.Common.Redis
 
         private static bool _isCacheError = false;
 
-        private static readonly Lazy<ConnectionMultiplexer> LazyConnection = 
+        private static readonly Lazy<ConnectionMultiplexer> LazyConnection =
             new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(Config.Connect));
 
         private static ConnectionMultiplexer Redis => LazyConnection.Value;
@@ -21,7 +21,7 @@ namespace MyChy.Frame.Common.Redis
             Config = CfgConfig.Reader<RedisConfig>("config/redis.cfg", "redis");
             if (string.IsNullOrEmpty(Config?.Connect))
             {
-                Config = new RedisConfig {IsCache = false};
+                Config = new RedisConfig { IsCache = false };
             }
         }
 
@@ -59,129 +59,122 @@ namespace MyChy.Frame.Common.Redis
         /// <summary>
         /// 获取缓存
         /// </summary>
-        /// <param name="cacheKey"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public static T GetCache<T>(string cacheKey)
+        public static T StringGetCache<T>(string key)
         {
-            if (Config.IsCache && !_isCacheError)
-            {
-                var redisdb = Redis.GetDatabase();
-                if (_isCacheError) return default(T);
-                var obj = redisdb.StringGet(Config.Name +cacheKey);
-                return SerializeHelper.StringToObj<T>(obj);
-            }
-            else
-            {
-                return default(T);
-            }
-
+            if (!Config.IsCache || _isCacheError) return default(T);
+            var redisdb = Redis.GetDatabase();
+            if (_isCacheError) return default(T);
+            var obj = redisdb.StringGet(Config.Name + key);
+            return SerializeHelper.StringToObj<T>(obj);
         }
 
 
         #region 删除缓存
 
-        public static void Remove(string cacheKey)
+        public static void Remove(string key)
         {
             if (!Config.IsCache || _isCacheError) return;
             var redisdb = GetDatabase();
             if (_isCacheError) return;
-            redisdb.KeyDelete(Config.Name + cacheKey);
+            redisdb.KeyDelete(Config.Name + key);
         }
 
-        public static void RemoveAsync(string cacheKey)
+        public static void RemoveAsync(string key)
         {
             if (!Config.IsCache || _isCacheError) return;
             var redisdb = GetDatabase();
             if (_isCacheError) return;
-            redisdb.KeyDeleteAsync(Config.Name + cacheKey);
+            redisdb.KeyDeleteAsync(Config.Name + key);
 
         }
 
         #endregion
 
-        #region 同步增加缓存
+        #region 同步增加 String缓存
 
         /// <summary>
         /// 添加缓存 10分钟
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
-        public static void SetCache(string cacheKey, object objObject)
+        public static void StringSetCache(string key, object objObject)
         {
             var time = DateTime.Now.AddSeconds(Config.CacheSeconds);
-            SetCache(cacheKey, objObject, time);
+            StringSetCache(key, objObject, time);
         }
 
         /// <summary>
         /// 添加缓存 指定时间
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
         /// <param name="seconds">秒</param>
-        public static void SetCache(string cacheKey, object objObject, int seconds)
+        public static void StringSetCache(string key, object objObject, int seconds)
         {
             var time = DateTime.Now.AddSeconds(seconds);
-            SetCache(cacheKey, objObject, time);
+            StringSetCache(key, objObject, time);
         }
 
         /// <summary>
         /// 添加缓存 指定时间
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
         /// <param name="time"></param>
-        public static void SetCache(string cacheKey, object objObject, DateTime time)
+        public static void StringSetCache(string key, object objObject, DateTime time)
         {
             if (!Config.IsCache || _isCacheError) return;
             var redisdb = GetDatabase();
             var obj = SerializeHelper.ObjToString(objObject);
             var ts = DateTime.Now.Subtract(time).Duration();
             if (_isCacheError) return;
-            redisdb.StringSet(Config.Name + cacheKey, obj, ts);
+            redisdb.StringSet(Config.Name + key, obj, ts);
         }
 
         #endregion
 
 
-        #region 异步增加缓存
+        #region 异步增加 String缓存
 
         /// <summary>
         /// 添加缓存 10分钟
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
-        public static void SetCacheAsync(string cacheKey, object objObject)
+        public static void StringSetCacheAsync(string key, object objObject)
         {
             var time = DateTime.Now.AddSeconds(Config.CacheSeconds);
-            SetCacheAsync(cacheKey, objObject, time);
+            StringSetCacheAsync(key, objObject, time);
         }
 
         /// <summary>
         /// 添加缓存 指定时间
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
         /// <param name="seconds">秒</param>
-        public static void SetCacheAsync(string cacheKey, object objObject, double seconds)
+        public static void StringSetCacheAsync(string key, object objObject, double seconds)
         {
             var time = DateTime.Now.AddSeconds(seconds);
-            SetCacheAsync(cacheKey, objObject, time);
+            StringSetCacheAsync(key, objObject, time);
         }
 
         /// <summary>
         /// 添加缓存 指定时间
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
         /// <param name="time"></param>
-        public static void SetCacheAsync(string cacheKey, object objObject, DateTime time)
+        public static void StringSetCacheAsync(string key, object objObject, DateTime time)
         {
             if (!Config.IsCache || _isCacheError) return;
             var redisdb = GetDatabase();
             var obj = SerializeHelper.ObjToString(objObject);
             var ts = DateTime.Now.Subtract(time).Duration();
             if (_isCacheError) return;
-            redisdb.StringSetAsync(Config.Name + cacheKey, obj, ts);
+            redisdb.StringSetAsync(Config.Name + key, obj, ts);
         }
 
         #endregion
@@ -238,6 +231,56 @@ namespace MyChy.Frame.Common.Redis
             var redisdb = Redis.GetDatabase();
             return _isCacheError ? 0 : redisdb.StringDecrement(Config.Name + key);
         }
+
+        #endregion
+
+        #region Set 无序存储数组
+
+        /// <summary>
+        /// Set列表增加数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject">数据</param>
+        public static void SetAddCache(string key, string objObject)
+        {
+            if (!Config.IsCache || _isCacheError) return;
+            var redisdb = GetDatabase();
+            var obj = SerializeHelper.ObjToString(objObject);
+            if (_isCacheError) return;
+            redisdb.SetAdd(Config.Name + key, obj);
+        }
+
+        /// <summary>
+        /// 判断Set 列表是否存在数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject"></param>
+        /// <returns></returns>
+        public static bool SetContainsCache(string key, string objObject)
+        {
+            if (!Config.IsCache || _isCacheError) return false;
+            var redisdb = GetDatabase();
+            if (_isCacheError) return false;
+            return redisdb.SetContains(Config.Name + key, objObject);
+        }
+
+        #endregion
+
+        #region List 有序存储数据
+
+        ///// <summary>
+        ///// Set列表增加数据
+        ///// </summary>
+        ///// <param name="key"></param>
+        ///// <param name="objObject">数据</param>
+        //public static void ListAddCache(string key, string objObject)
+        //{
+        //    if (!Config.IsCache || _isCacheError) return;
+        //    var redisdb = GetDatabase();
+        //    var obj = SerializeHelper.ObjToString(objObject);
+        //    if (_isCacheError) return;
+        //    redisdb.ListInsertAfter(Config.Name + key, obj);
+
 
         #endregion
 
