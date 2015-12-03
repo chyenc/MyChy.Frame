@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("MyChy.Frame.Common.Redis")]
-[assembly: AssemblyDescription("去除没有必要引用")]
+[assembly: AssemblyDescription("判断是否缓存是否存在")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MyChy")]
 [assembly: AssemblyProduct("MyChy.Frame.Common.Redis")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”: :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.2")]
-[assembly: AssemblyFileVersion("1.0.0.2")]
+[assembly: AssemblyVersion("1.0.0.3")]
+[assembly: AssemblyFileVersion("1.0.0.3")]

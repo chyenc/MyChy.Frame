@@ -17,6 +17,8 @@ namespace MyChy.Frame.Common
     {
         private static readonly WebCacheConfig Config = null;
 
+        public static readonly bool IsCache = false;
+
         static WebCache()
         {
             if (Config != null) return;
@@ -25,6 +27,7 @@ namespace MyChy.Frame.Common
             {
                 Config = new WebCacheConfig { IsCache = false };
             }
+            IsCache = Config.IsCache;
         }
 
         /// <summary>

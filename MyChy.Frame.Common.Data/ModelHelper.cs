@@ -17,12 +17,13 @@ namespace MyChy.Frame.Common.Data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="da"></param>
+        /// <param name="sqltxt"></param>
         /// <returns></returns>
-        public static T GetModelByTable<T>(DataTable da)
+        public static T GetModelByTable<T>(DataTable da, string sqltxt)
         {
             if (da.Rows.Count == 0) return default(T);
 
-            var result = GetListModelByTable<T>(da);
+            var result = GetListModelByTable<T>(da, sqltxt);
             if (result != null && result.Count > 0)
             {
                 return result.ToList<T>()[0];
@@ -36,8 +37,9 @@ namespace MyChy.Frame.Common.Data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="da"></param>
+        /// <param name="sqltxt"></param>
         /// <returns></returns>
-        public static IList<T> GetListModelByTable<T>(DataTable da)
+        public static IList<T> GetListModelByTable<T>(DataTable da,string sqltxt)
         {
             IList<T> result = new List<T>();
             if (da == null)
@@ -48,7 +50,13 @@ namespace MyChy.Frame.Common.Data
             var t = typeof(T);
             var model = Activator.CreateInstance(t);
             var col = TypeDescriptor.GetProperties(model);
-            var list = WebCache.GetCache<HashSet<string>>(t.FullName);
+            HashSet<string> list = null;
+            var webcachename=string.Empty;
+            if (WebCache.IsCache)
+            {
+                webcachename = t.FullName + "_" + SafeSecurity.Md5Encrypt(sqltxt);
+                list = WebCache.GetCache<HashSet<string>>(webcachename);
+            }
             if (list == null)
             {
                 list = new HashSet<string>();
@@ -59,7 +67,10 @@ namespace MyChy.Frame.Common.Data
                         list.Add(item.Name);
                     }
                 }
-                WebCache.SetCache(t.FullName, list, 60);
+                if (WebCache.IsCache)
+                {
+                    WebCache.SetCache(webcachename, list, 60);
+                }
             }
 
 

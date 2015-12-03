@@ -8,7 +8,7 @@ namespace MyChy.Frame.Common.Redis
     {
         private static readonly RedisConfig Config = null;
 
-        private static bool _isCacheError = false;
+        public static bool IsCacheError = false;
 
         private static readonly Lazy<ConnectionMultiplexer> LazyConnection =
             new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(Config.Connect));
@@ -22,6 +22,10 @@ namespace MyChy.Frame.Common.Redis
             if (string.IsNullOrEmpty(Config?.Connect))
             {
                 Config = new RedisConfig { IsCache = false };
+            }
+            if (!Config.IsCache)
+            {
+                IsCacheError = true;
             }
         }
 
@@ -51,46 +55,65 @@ namespace MyChy.Frame.Common.Redis
             catch (Exception exception)
             {
                 LogHelper.Log(exception);
-                _isCacheError = true;
+                IsCacheError = true;
             }
             return null;
         }
 
-        /// <summary>
-        /// 获取缓存
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public static T StringGetCache<T>(string key)
-        {
-            if (!Config.IsCache || _isCacheError) return default(T);
-            var redisdb = Redis.GetDatabase();
-            if (_isCacheError) return default(T);
-            var obj = redisdb.StringGet(Config.Name + key);
-            return SerializeHelper.StringToObj<T>(obj);
-        }
+
+
 
 
         #region 删除缓存
 
         public static void Remove(string key)
         {
-            if (!Config.IsCache || _isCacheError) return;
+            if (!Config.IsCache || IsCacheError) return;
             var redisdb = GetDatabase();
-            if (_isCacheError) return;
+            if (IsCacheError) return;
             redisdb.KeyDelete(Config.Name + key);
         }
 
         public static void RemoveAsync(string key)
         {
-            if (!Config.IsCache || _isCacheError) return;
+            if (!Config.IsCache || IsCacheError) return;
             var redisdb = GetDatabase();
-            if (_isCacheError) return;
+            if (IsCacheError) return;
             redisdb.KeyDeleteAsync(Config.Name + key);
 
         }
 
+        /// <summary>
+        /// 缓存 是否存在
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static bool ExistsKey(string key)
+        {
+            if (!Config.IsCache || IsCacheError) return false;
+            var redisdb = Redis.GetDatabase();
+            if (IsCacheError) return false;
+            return redisdb.KeyExists(key);
+        }
+
         #endregion
+
+        #region String缓存
+
+        /// <summary>
+        /// 获取String缓存
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static T StringGetCache<T>(string key)
+        {
+            if (!Config.IsCache || IsCacheError) return default(T);
+            var redisdb = Redis.GetDatabase();
+            if (IsCacheError) return default(T);
+            var obj = redisdb.StringGet(Config.Name + key);
+            return SerializeHelper.StringToObj<T>(obj);
+        }
+
 
         #region 同步增加 String缓存
 
@@ -125,11 +148,11 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="time"></param>
         public static void StringSetCache(string key, object objObject, DateTime time)
         {
-            if (!Config.IsCache || _isCacheError) return;
+            if (!Config.IsCache || IsCacheError) return;
             var redisdb = GetDatabase();
             var obj = SerializeHelper.ObjToString(objObject);
             var ts = DateTime.Now.Subtract(time).Duration();
-            if (_isCacheError) return;
+            if (IsCacheError) return;
             redisdb.StringSet(Config.Name + key, obj, ts);
         }
 
@@ -169,13 +192,16 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="time"></param>
         public static void StringSetCacheAsync(string key, object objObject, DateTime time)
         {
-            if (!Config.IsCache || _isCacheError) return;
+            if (!Config.IsCache || IsCacheError) return;
             var redisdb = GetDatabase();
             var obj = SerializeHelper.ObjToString(objObject);
             var ts = DateTime.Now.Subtract(time).Duration();
-            if (_isCacheError) return;
+            if (IsCacheError) return;
             redisdb.StringSetAsync(Config.Name + key, obj, ts);
         }
+
+        #endregion
+
 
         #endregion
 
@@ -190,9 +216,9 @@ namespace MyChy.Frame.Common.Redis
         /// <returns></returns>
         public static long Increment(string key, long cardinal)
         {
-            if (!Config.IsCache || _isCacheError) return -1;
+            if (!Config.IsCache || IsCacheError) return -1;
             var redisdb = Redis.GetDatabase();
-            return _isCacheError ? -1 : redisdb.StringIncrement(Config.Name + key, cardinal);
+            return IsCacheError ? -1 : redisdb.StringIncrement(Config.Name + key, cardinal);
         }
 
         /// <summary>
@@ -202,9 +228,9 @@ namespace MyChy.Frame.Common.Redis
         /// <returns></returns>
         public static long Increment(string key)
         {
-            if (!Config.IsCache || _isCacheError) return -1;
+            if (!Config.IsCache || IsCacheError) return -1;
             var redisdb = Redis.GetDatabase();
-            return _isCacheError ? -1 : redisdb.StringIncrement(Config.Name + key);
+            return IsCacheError ? -1 : redisdb.StringIncrement(Config.Name + key);
         }
 
         /// <summary>
@@ -215,9 +241,9 @@ namespace MyChy.Frame.Common.Redis
         /// <returns></returns>
         public static long Decrement(string key, long cardinal)
         {
-            if (!Config.IsCache || _isCacheError) return 0;
+            if (!Config.IsCache || IsCacheError) return 0;
             var redisdb = Redis.GetDatabase();
-            return _isCacheError ? 0 : redisdb.StringDecrement(Config.Name + key, cardinal);
+            return IsCacheError ? 0 : redisdb.StringDecrement(Config.Name + key, cardinal);
         }
 
         /// <summary>
@@ -227,9 +253,9 @@ namespace MyChy.Frame.Common.Redis
         /// <returns></returns>
         public static long Decrement(string key)
         {
-            if (!Config.IsCache || _isCacheError) return 0;
+            if (!Config.IsCache || IsCacheError) return 0;
             var redisdb = Redis.GetDatabase();
-            return _isCacheError ? 0 : redisdb.StringDecrement(Config.Name + key);
+            return IsCacheError ? 0 : redisdb.StringDecrement(Config.Name + key);
         }
 
         #endregion
@@ -243,10 +269,10 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="objObject">数据</param>
         public static void SetAddCache(string key, string objObject)
         {
-            if (!Config.IsCache || _isCacheError) return;
+            if (!Config.IsCache || IsCacheError) return;
             var redisdb = GetDatabase();
             var obj = SerializeHelper.ObjToString(objObject);
-            if (_isCacheError) return;
+            if (IsCacheError) return;
             redisdb.SetAdd(Config.Name + key, obj);
         }
 
@@ -258,9 +284,9 @@ namespace MyChy.Frame.Common.Redis
         /// <returns></returns>
         public static bool SetContainsCache(string key, string objObject)
         {
-            if (!Config.IsCache || _isCacheError) return false;
+            if (!Config.IsCache || IsCacheError) return false;
             var redisdb = GetDatabase();
-            if (_isCacheError) return false;
+            if (IsCacheError) return false;
             return redisdb.SetContains(Config.Name + key, objObject);
         }
 
@@ -275,10 +301,10 @@ namespace MyChy.Frame.Common.Redis
         ///// <param name="objObject">数据</param>
         //public static void ListAddCache(string key, string objObject)
         //{
-        //    if (!Config.IsCache || _isCacheError) return;
+        //    if (!Config.IsCache || IsCacheError) return;
         //    var redisdb = GetDatabase();
         //    var obj = SerializeHelper.ObjToString(objObject);
-        //    if (_isCacheError) return;
+        //    if (IsCacheError) return;
         //    redisdb.ListInsertAfter(Config.Name + key, obj);
 
 
