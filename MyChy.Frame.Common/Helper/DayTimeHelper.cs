@@ -22,8 +22,37 @@ namespace MyChy.Frame.Common.Helper
             var dayweek = DateTime.Now.DayOfWeek;
             var days1 = (int)dayweek;
             if (days1 == 0) days1 = 7;
-            int addday = weekday + days - days1;
+            var addday = weekday + days - days1;
             return DateTime.Now.AddDays(addday).Date;
+        }
+
+
+        /// <summary>
+        /// Ticks 时间截转换成时间
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public static DateTime ChangeTicks(long ticks)
+        {
+            var datetime = new DateTime(ticks);
+            return datetime;
+        }
+
+
+        /// <summary>
+        /// 判断时间截 兼容Java 
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <param name="minutes"></param>
+        /// <returns></returns>
+        public static bool CheckTicks(long ticks, int minutes = 10)
+        {
+            if (ticks < 621356256000000000)
+            {
+                ticks = (ticks * 10000) + 621356256000000000;
+            }
+            var datetime = new DateTime(ticks);
+            return (datetime <= DateTime.Now.AddMinutes(minutes) && datetime >= DateTime.Now.AddMinutes(0 - minutes));
         }
     }
 }

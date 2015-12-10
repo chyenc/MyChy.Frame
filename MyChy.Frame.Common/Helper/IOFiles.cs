@@ -17,14 +17,7 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static bool IsFolder(string files)
         {
-            if (files.Length == 0 || !Directory.Exists(files))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return files.Length != 0 && Directory.Exists(files);
         }
 
         /// <summary>
@@ -34,14 +27,7 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static bool IsFile(string files)
         {
-            if (files.Length == 0 || !File.Exists(files))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return files.Length != 0 && File.Exists(files);
         }
 
 
@@ -52,10 +38,7 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static string[] File_List(string files)
         {
-            string[] Files;
-            Files = Directory.GetFiles(files);
-            return Files;
-
+            return Directory.GetFiles(files);
         }
 
         /// <summary>
@@ -65,29 +48,27 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static string[] Folder_List(string files)
         {
-            string[] Files;
-            Files = Directory.GetDirectories(files);
-            return Files;
+            return Directory.GetDirectories(files);
         }
 
         /// <summary>
         /// 返回文件扩展名
         /// </summary>
-        /// <param name="Files"></param>
+        /// <param name="files"></param>
         /// <returns></returns>
-        public static string GetExtension(string Files)
+        public static string GetExtension(string files)
         {
-            return (Path.GetExtension(Files));
+            return (Path.GetExtension(files));
         }
 
         /// <summary>
         /// 返回所在文件夹
         /// </summary>
-        /// <param name="Files"></param>
+        /// <param name="files"></param>
         /// <returns></returns>
-        public static string GetFolderName(string Files)
+        public static string GetFolderName(string files)
         {
-            return (Path.GetDirectoryName(Files));
+            return (Path.GetDirectoryName(files));
         }
 
         /// <summary>
@@ -97,66 +78,64 @@ namespace MyChy.Frame.Common.Helper
         public static void CreatedFolder(string files)
         {
             //是否存在
-            if (!IsFolder(files))
+            if (IsFolder(files)) return;
+            try
             {
-                try
-                {
-                    //建立文件夹
-                    Directory.CreateDirectory(files);
-                }
-                catch
-                {
-
-                }
+                //建立文件夹
+                Directory.CreateDirectory(files);
+            }
+            catch
+            {
+                // ignored
             }
         }
 
         /// <summary>
         /// 创建日期格式文件夹返回
         /// </summary>
-        /// <param name="Folder"></param>
-        public static string CreatedFolderData(string Folder)
+        /// <param name="folder"></param>
+        public static string CreatedFolderData(string folder)
         {
-            string date = DateTime.Now.ToString("yyyyMM");
-            return CreatedFolderData(Folder, date);
+            var date = DateTime.Now.ToString("yyyyMM");
+            return CreatedFolderData(folder, date);
         }
 
         /// <summary>
         /// 创建日期格式文件夹返回
         /// </summary>
-        /// <param name="Folder"></param>
+        /// <param name="folder"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public static string CreatedFolderData(string Folder, string date)
+        public static string CreatedFolderData(string folder, string date)
         {
-            string FolderData = string.Empty;
-            return CreatedFolderData(Folder, date, out FolderData);
+            string folderData;
+            return CreatedFolderData(folder, date, out folderData);
         }
 
         /// <summary>
         /// 创建日期格式文件夹返回
         /// </summary>
-        /// <param name="Folder"></param>
-        public static string CreatedFolderData(string Folder, out string FolderData)
+        /// <param name="folder"></param>
+        /// <param name="folderData"></param>
+        public static string CreatedFolderData(string folder, out string folderData)
         {
-            string date = DateTime.Now.ToString("yyyyMM");
-            return CreatedFolderData(Folder, date, out FolderData);
+            var date = DateTime.Now.ToString("yyyyMM");
+            return CreatedFolderData(folder, date, out folderData);
         }
 
         /// <summary>
         /// 创建日期格式文件夹返回
         /// </summary>
-        /// <param name="Folder"></param>
+        /// <param name="folder"></param>
         /// <param name="date"></param>
-        /// <param name="FolderData"></param>
+        /// <param name="folderData"></param>
         /// <returns></returns>
-        public static string CreatedFolderData(string Folder, string date, out string FolderData)
+        public static string CreatedFolderData(string folder, string date, out string folderData)
         {
             //  FolderData = date;
-            string res = string.Empty;
-            CreatedFolder(Folder);
-            FolderData = date + "/";
-            res = Folder + FolderData;
+            CreatedFolder(folder);
+            folderData = date + "/";
+            var res = folder + folderData;
             CreatedFolder(res);
             return res;
         }
@@ -178,14 +157,9 @@ namespace MyChy.Frame.Common.Helper
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static bool IsNum(String str)
+        public static bool IsNum(string str)
         {
-            for (int i = 0; i < str.Length; i++)
-            {
-                if (str[i] < '0' || str[i] > '9')
-                    return false;
-            }
-            return true;
+            return str.All(t => t >= '0' && t <= '9');
         }
 
         /// <summary>
@@ -227,12 +201,8 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static string GetFileNameoutExtension(string files)
         {
-            int x = files.LastIndexOf(".");
-            if (x > 0)
-            {
-                return files.Substring(0, files.LastIndexOf("."));
-            }
-            return files;
+            var x = files.LastIndexOf(".", StringComparison.Ordinal);
+            return x > 0 ? files.Substring(0, files.LastIndexOf(".", StringComparison.Ordinal)) : files;
         }
 
         /// <summary>
@@ -241,19 +211,17 @@ namespace MyChy.Frame.Common.Helper
         /// <param name="file"></param>
         public static void DelFile(string file)
         {
-            if (IsFile(file))
+            if (!IsFile(file)) return;
+            try
             {
-                try
-                {
-                    FileInfo fi = new FileInfo(file);
-                    if (fi.Attributes.ToString().IndexOf("ReadOnly") != -1)
-                        fi.Attributes = FileAttributes.Normal;
-                    File.Delete(file);
-                }
-                catch
-                {
-
-                }
+                FileInfo fi = new FileInfo(file);
+                if (fi.Attributes.ToString().IndexOf("ReadOnly", StringComparison.Ordinal) != -1)
+                    fi.Attributes = FileAttributes.Normal;
+                File.Delete(file);
+            }
+            catch
+            {
+                // ignored
             }
         }
 
