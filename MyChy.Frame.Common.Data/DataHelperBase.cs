@@ -23,7 +23,7 @@ namespace MyChy.Frame.Common.Data
         {
             using (var ds = db.ExecuteDataSet(cmd))
             {
-                return ModelHelper.GetListModelByTable<T>(ds.Tables[0],cmd.CommandText);
+                return ModelHelper.GetListModelByTable<T>(ds.Tables[0]);
             }
         }
 
@@ -38,7 +38,7 @@ namespace MyChy.Frame.Common.Data
         {
             using (var ds = db.ExecuteDataSet(cmd))
             {
-                return ModelHelper.GetModelByTable<T>(ds.Tables[0], cmd.CommandText);
+                return ModelHelper.GetModelByTable<T>(ds.Tables[0]);
             }
         }
 
@@ -77,7 +77,7 @@ namespace MyChy.Frame.Common.Data
         public static IList<T> GetListEntity<T>(Database db, string sqltxt, SqlParameter[] parms)
         {
             var da = GetDataTable(db, sqltxt, parms);
-            return ModelHelper.GetListModelByTable<T>(da, sqltxt);
+            return ModelHelper.GetListModelByTable<T>(da);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace MyChy.Frame.Common.Data
         public static T GetEntity<T>(Database db, string sqltxt, SqlParameter[] parms)
         {
             var da = GetDataTable(db, sqltxt, parms);
-            return ModelHelper.GetModelByTable<T>(da, sqltxt);
+            return ModelHelper.GetModelByTable<T>(da);
         }
 
         /// <summary>

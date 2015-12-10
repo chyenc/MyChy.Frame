@@ -27,6 +27,23 @@ namespace MyChy.Frame.Common.Redis
             {
                 IsCacheError = true;
             }
+            try
+            {
+                var connect = ConnectionMultiplexer.Connect(Config.Connect);
+                var res = connect.ClientName;
+            }
+            catch (Exception exception)
+            {
+                Config.IsCache = false;
+                LogHelper.Log(exception);
+                IsCacheError = true;
+            }
+            //finally
+            //{
+            //    Config.IsCache = false;
+            //    IsCacheError = true;
+            //}
+
         }
 
         //private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
@@ -57,6 +74,7 @@ namespace MyChy.Frame.Common.Redis
                 LogHelper.Log(exception);
                 IsCacheError = true;
             }
+            
             return null;
         }
 
