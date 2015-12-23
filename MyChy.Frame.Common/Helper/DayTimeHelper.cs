@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyChy.Frame.Common.Helper
 {
-   public  static class DayTimeHelper
+    public static class DayTimeHelper
     {
         /// <summary>
         /// 计算星期几
@@ -24,6 +24,18 @@ namespace MyChy.Frame.Common.Helper
             if (days1 == 0) days1 = 7;
             var addday = weekday + days - days1;
             return DateTime.Now.AddDays(addday).Date;
+        }
+
+        /// <summary>
+        /// 当天剩余秒数
+        /// </summary>
+        /// <returns></returns>
+        public static int SecondsRemainingDay()
+        {
+            var ts1=new TimeSpan(DateTime.Now.Ticks);
+            var ts2 = new TimeSpan(DateTime.Now.AddDays(1).Date.Ticks);
+            var ts = ts1.Subtract(ts2).Duration();
+            return ts.TotalSeconds.To<int>()-1;
         }
 
 

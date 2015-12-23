@@ -102,7 +102,7 @@ namespace MyChy.Frame.Common.Redis
         }
 
         /// <summary>
-        /// 缓存 是否存在
+        /// key是否存在
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -111,7 +111,7 @@ namespace MyChy.Frame.Common.Redis
             if (!Config.IsCache || IsCacheError) return false;
             var redisdb = Redis.GetDatabase();
             if (IsCacheError) return false;
-            return redisdb.KeyExists(key);
+            return redisdb.KeyExists(Config.Name + key);
         }
 
         #endregion
@@ -174,6 +174,21 @@ namespace MyChy.Frame.Common.Redis
             redisdb.StringSet(Config.Name + key, obj, ts);
         }
 
+        /// <summary>
+        /// 添加缓存 指定时间
+        /// </summary>
+        /// <param name="key">KEY</param>
+        /// <param name="objObject">数据</param>
+        public static void StringSetCacheDay(string key, object objObject)
+        {
+            if (!Config.IsCache || IsCacheError) return;
+            var redisdb = GetDatabase();
+            var obj = SerializeHelper.ObjToString(objObject);
+            var ts = DateTime.Now.Subtract(DateTime.Now.AddDays(1).Date).Duration();
+            if (IsCacheError) return;
+            redisdb.StringSet(Config.Name + key, obj, ts);
+        }
+
         #endregion
 
 
@@ -218,6 +233,21 @@ namespace MyChy.Frame.Common.Redis
             redisdb.StringSetAsync(Config.Name + key, obj, ts);
         }
 
+        /// <summary>
+        /// 添加缓存 指定时间
+        /// </summary>
+        /// <param name="key">KEY</param>
+        /// <param name="objObject">数据</param>
+        public static void StringSetCacheDayAsync(string key, object objObject)
+        {
+            if (!Config.IsCache || IsCacheError) return;
+            var redisdb = GetDatabase();
+            var obj = SerializeHelper.ObjToString(objObject);
+            var ts = DateTime.Now.Subtract(DateTime.Now.AddDays(1).Date).Duration();
+            if (IsCacheError) return;
+            redisdb.StringSetAsync(Config.Name + key, obj, ts);
+        }
+
         #endregion
 
 
@@ -236,6 +266,7 @@ namespace MyChy.Frame.Common.Redis
         {
             if (!Config.IsCache || IsCacheError) return -1;
             var redisdb = Redis.GetDatabase();
+     
             return IsCacheError ? -1 : redisdb.StringIncrement(Config.Name + key, cardinal);
         }
 
@@ -295,6 +326,20 @@ namespace MyChy.Frame.Common.Redis
         }
 
         /// <summary>
+        /// Set列表增加数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject">数据</param>
+        public static void SetAddCacheAsync(string key, string objObject)
+        {
+            if (!Config.IsCache || IsCacheError) return;
+            var redisdb = GetDatabase();
+            var obj = SerializeHelper.ObjToString(objObject);
+            if (IsCacheError) return;
+            redisdb.SetAddAsync(Config.Name + key, obj);
+        }
+
+        /// <summary>
         /// 判断Set 列表是否存在数据
         /// </summary>
         /// <param name="key"></param>
@@ -305,6 +350,74 @@ namespace MyChy.Frame.Common.Redis
             if (!Config.IsCache || IsCacheError) return false;
             var redisdb = GetDatabase();
             if (IsCacheError) return false;
+            return redisdb.SetContains(Config.Name + key, objObject);
+        }
+
+        /// <summary>
+        /// Set列表增加数据 按照 天存储
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject"></param>
+        /// <param name="isDelYesterday">是否删除昨天列表</param>
+        public static void SetAddCacheDay(string key, string objObject, bool isDelYesterday = false)
+        {
+            if (!Config.IsCache || IsCacheError) return;
+            var redisdb = GetDatabase();
+            if (IsCacheError) return;
+            if (isDelYesterday)
+            {
+                var keyday = key + DateTime.Now.Date.AddDays(-1).ToString("yyyy-MM-dd");
+                var val = ExistsKey(keyday + "str");
+                if (!val)
+                {
+                    StringSetCacheDayAsync(keyday + "str", "1");
+                    Remove(keyday);
+                }
+            }
+            key = key + DateTime.Now.Date.ToString("yyyy-MM-dd");
+
+            SetAddCache(key, objObject);
+        }
+
+        /// <summary>
+        /// Set列表增加数据 按照 天存储
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject"></param>
+        /// <param name="isDelYesterday">是否删除昨天列表</param>
+        public static void SetAddCacheDayAsync(string key, string objObject, bool isDelYesterday = false)
+        {
+            if (!Config.IsCache || IsCacheError) return;
+            var redisdb = GetDatabase();
+            if (IsCacheError) return;
+            if (isDelYesterday)
+            {
+                var keyday = key + DateTime.Now.Date.AddDays(-1).ToString("yyyy-MM-dd");
+                var val = ExistsKey(keyday + "str");
+                if (!val)
+                {
+                    StringSetCacheDayAsync(keyday + "str", "1");
+                    Remove(keyday);
+                }
+            }
+            key = key + DateTime.Now.Date.ToString("yyyy-MM-dd");
+
+            SetAddCacheAsync(key, objObject);
+        }
+
+
+        /// <summary>
+        /// 判断Set 列表是否存在数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject"></param>
+        /// <returns></returns>
+        public static bool SetContainsCacheDay(string key, string objObject)
+        {
+            if (!Config.IsCache || IsCacheError) return false;
+            var redisdb = GetDatabase();
+            if (IsCacheError) return false;
+            key = key + DateTime.Now.Date.ToString("yyyy-MM-dd");
             return redisdb.SetContains(Config.Name + key, objObject);
         }
 
@@ -327,6 +440,10 @@ namespace MyChy.Frame.Common.Redis
 
 
         #endregion
+
+        #region hash 
+
+#endregion
 
     }
 }

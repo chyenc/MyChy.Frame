@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("MyChy.Frame.Common")]
-[assembly: AssemblyDescription("修改WebCaChe增加外部显示是否缓存")]
+[assembly: AssemblyDescription("增加SecondsRemainingDay 方法")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MyChy")]
 [assembly: AssemblyProduct("MyChy.Frame.Common")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.3")]
-[assembly: AssemblyFileVersion("1.0.1.3")]
+[assembly: AssemblyVersion("1.0.1.6")]
+[assembly: AssemblyFileVersion("1.0.1.6")]

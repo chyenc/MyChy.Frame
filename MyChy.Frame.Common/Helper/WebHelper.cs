@@ -291,6 +291,49 @@ namespace MyChy.Frame.Common.Helper
         }
 
         /// <summary>
+        /// 获取当前URL
+        /// </summary>
+        /// <returns></returns>
+        public static string GetUrl()
+        {
+            string result;
+            try
+            {
+                result = System.Web.HttpContext.Current.Request.Url.ToString();
+            }
+            catch (Exception exception)
+            {
+                LogHelper.Log(exception);
+                result = "0.0.0.0";
+                //throw;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取上一级URL
+        /// </summary>
+        /// <returns></returns>
+        public static string GetUrlReferrer()
+        {
+            string result=string.Empty;
+            try
+            {
+                if (System.Web.HttpContext.Current.Request.UrlReferrer != null)
+                    result = System.Web.HttpContext.Current.Request.UrlReferrer.AbsoluteUri.ToString();
+            }
+            catch (Exception exception)
+            {
+                LogHelper.Log(exception);
+                result = "0.0.0.0";
+                //throw;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 获取固定位置参数值
         /// </summary>
         /// <param name="length"></param>

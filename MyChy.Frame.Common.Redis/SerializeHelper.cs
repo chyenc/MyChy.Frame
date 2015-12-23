@@ -55,6 +55,10 @@ namespace MyChy.Frame.Common.Redis
         public static T StringToObj<T>(string value)
         {
             object result;
+            if (string.IsNullOrEmpty(value))
+            {
+                return default(T);
+            }
             try
             {
                 var ty = typeof(T);
