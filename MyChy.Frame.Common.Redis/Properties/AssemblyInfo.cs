@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("MyChy.Frame.Common.Redis")]
-[assembly: AssemblyDescription("修复StringToObj报错")]
+[assembly: AssemblyDescription("增加HashDay类型 修改名称")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MyChy")]
 [assembly: AssemblyProduct("MyChy.Frame.Common.Redis")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 //可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”: :
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.9")]
-[assembly: AssemblyFileVersion("1.0.0.9")]
+[assembly: AssemblyVersion("1.0.0.11")]
+[assembly: AssemblyFileVersion("1.0.0.11")]

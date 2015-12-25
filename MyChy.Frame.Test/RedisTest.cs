@@ -24,7 +24,7 @@ namespace MyChy.Frame.Test
             var s = RedisServer.ExistsKey("11");
 
 
-            RedisServer.StringSetCacheDay("21", time);
+            RedisServer.StringDaySetCache("21", time);
             time = RedisServer.StringGetCache<DateTime>("21");
 
             var ts = new Tests
@@ -59,27 +59,56 @@ namespace MyChy.Frame.Test
             const string key = "RedisTest_SetTest";
             long ss = 13810565157;
             string mobile = "13810565156";
-            var ss1 = RedisServer.SetContainsCacheDay(key, mobile);
+            var ss1 = RedisServer.SetDayContainsCache(key, mobile);
             if (!ss1)
             {
-                RedisServer.SetAddCacheDay(key, mobile,true);
-                ss1 = RedisServer.SetContainsCacheDay(key, mobile);
+                RedisServer.SetDayAddCache(key, mobile,true);
+                ss1 = RedisServer.SetDayContainsCache(key, mobile);
 
             }
          
             for (int i = 0; i < 100000; i++)
             {
                 mobile = ss.ToString();
-                ss1 = RedisServer.SetContainsCacheDay(key, mobile);
+                ss1 = RedisServer.SetDayContainsCache(key, mobile);
                 if (!ss1)
                 {
-                    RedisServer.SetAddCacheDay(key, mobile);
+                    RedisServer.SetDayAddCache(key, mobile);
                 }
                 ss = ss+ 1;
             }
 
 
            
+        }
+
+
+        [Test]
+        public void HashTest()
+        {
+            string key = "Hash";
+            string name =String.Empty;
+            for (int i = 0; i < 100; i++)
+            {
+                name = Guid.NewGuid().ToString("N");
+                RedisServer.HashAddCache(key,name,i);
+            }
+            var xx = RedisServer.HashGetCache<int>(key, name);
+            for (int i = 0; i < 100; i++)
+            {
+                name = Guid.NewGuid().ToString("N");
+                RedisServer.HashAddCache(key, name, new Tests() {Tilte = name,id=i});
+            }
+            var zz = RedisServer.HashGetCache<Tests>(key, name);
+
+            for (int i = 0; i < 100; i++)
+            {
+                name = Guid.NewGuid().ToString("N");
+                RedisServer.HashAddCache(key,  i.ToString(), name);
+            }
+            var yy = RedisServer.HashGetCache<string>(key, "20");
+
+
         }
 
         public class Tests

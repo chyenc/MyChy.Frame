@@ -128,5 +128,24 @@ namespace MyChy.Frame.Common
             return enText.ToString();
             //return FormsAuthentication.HashPasswordForStoringInConfigFile(strText, "SHA1");
         }
+
+        /// <summary>
+        /// SHA1加密
+        /// </summary>
+        /// <param name="strText"></param>
+        /// <returns></returns>
+        public static string Sha512(string strText)
+        {
+            var sha1 = SHA512.Create();
+
+            var sha1Arr = sha1.ComputeHash(Encoding.UTF8.GetBytes(strText));
+            var enText = new StringBuilder();
+            foreach (var b in sha1Arr)
+            {
+                enText.AppendFormat("{0:x2}", b);
+            }
+            return enText.ToString();
+            //return FormsAuthentication.HashPasswordForStoringInConfigFile(strText, "SHA1");
+        }
     }
 }

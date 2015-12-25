@@ -55,8 +55,8 @@ namespace MyChy.Frame.Common.Data
             //    webcachename = t.FullName + "_" + SafeSecurity.Md5Encrypt(sqltxt);
             //    list = WebCache.GetCache<HashSet<string>>(webcachename);
             //}
-            if (list == null)
-            {
+          //  if (list == null)
+           // {
                 list = new HashSet<string>();
                 foreach (PropertyDescriptor item in col)
                 {
@@ -69,7 +69,7 @@ namespace MyChy.Frame.Common.Data
                 //{
                 //    WebCache.SetCache(webcachename, list, 60);
                 //}
-            }
+          //  }
 
 
             foreach (DataRow dr in da.Rows)
