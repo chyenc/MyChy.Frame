@@ -17,6 +17,10 @@ namespace MyChy.Frame.Test
             int ss = DayTimeHelper.SecondsRemainingDay();
             DateTime da = DateTime.Now.AddSeconds(ss);
 
+            long tokin = DateTime.Now.Ticks;
+            int xx = DayTimeHelper.CalculatingDifferenceTicksSecond(tokin);
+            xx = DayTimeHelper.CalculatingDifferenceTicksMillisecond(tokin);
+
         }
     }
 }

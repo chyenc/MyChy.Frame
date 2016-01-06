@@ -23,14 +23,23 @@ namespace MyChy.Frame.Common.Redis
             {
                 Config = new RedisConfig { IsCache = false };
             }
+            else
+            {
+                if (Config.DefaultDatabase > 0)
+                {
+                    Config.Connect = Config.Connect + ",defaultDatabase=" + Config.DefaultDatabase;
+                }
+            }
             if (!Config.IsCache)
             {
                 IsCacheError = true;
             }
             try
             {
+
                 var connect = ConnectionMultiplexer.Connect(Config.Connect);
                 var res = connect.ClientName;
+
             }
             catch (Exception exception)
             {

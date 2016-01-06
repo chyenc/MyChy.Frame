@@ -23,7 +23,7 @@ namespace MyChy.Frame.Test
 
             var s = RedisServer.ExistsKey("11");
 
-
+           
             RedisServer.StringDaySetCache("21", time);
             time = RedisServer.StringGetCache<DateTime>("21");
 
@@ -37,11 +37,11 @@ namespace MyChy.Frame.Test
             ts1.id = 2;
             RedisServer.StringSetCache("31", ts1);
             var ts2 = RedisServer.StringGetCache<Tests>("31");
+           
+                        //long xx = 0;
 
-            //long xx = 0;
-
-           // xx = RedisServer.StringIncrement("asdf1", 10);
-            xx = RedisServer.Increment("asdf11");
+                        // xx = RedisServer.StringIncrement("asdf1", 10);
+                        xx = RedisServer.Increment("asdf11");
             xx = RedisServer.Increment("asdf11");
             xx = RedisServer.Increment("asdf11");
             xx = RedisServer.StringGetCache<long>("asdf11");

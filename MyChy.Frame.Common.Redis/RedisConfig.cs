@@ -16,5 +16,7 @@ namespace MyChy.Frame.Common.Redis
 
         public string Connect { get; set; }
 
+        public int DefaultDatabase { get; set; }
+
     }
 }

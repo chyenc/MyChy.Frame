@@ -66,5 +66,35 @@ namespace MyChy.Frame.Common.Helper
             var datetime = new DateTime(ticks);
             return (datetime <= DateTime.Now.AddMinutes(minutes) && datetime >= DateTime.Now.AddMinutes(0 - minutes));
         }
+
+
+        /// <summary>
+        /// 计算时间截差值 秒
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public static int CalculatingDifferenceTicksSecond(long ticks)
+        {
+            var ts1 = new TimeSpan(DateTime.Now.Ticks);
+            var ts2 = new TimeSpan(ticks);
+            var ts = ts2.Subtract(ts1).Duration();
+            return ts.TotalSeconds.To<int>();
+
+        }
+
+
+        /// <summary>
+        /// 计算时间截差值 毫秒
+        /// </summary>
+        /// <param name="ticks"></param>
+        /// <returns></returns>
+        public static int CalculatingDifferenceTicksMillisecond(long ticks)
+        {
+            var ts1 = new TimeSpan(DateTime.Now.Ticks);
+            var ts2 = new TimeSpan(ticks);
+            var ts = ts2.Subtract(ts1).Duration();
+            return ts.TotalMilliseconds.To<int>();
+
+        }
     }
 }
