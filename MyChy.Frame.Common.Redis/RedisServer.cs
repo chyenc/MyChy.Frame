@@ -430,6 +430,33 @@ namespace MyChy.Frame.Common.Redis
             return redisdb.SetContains(Config.Name + key, objObject);
         }
 
+        /// <summary>
+        /// Hash列表 Name 删除
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        public static bool SetDelete(string key, string name)
+        {
+            if (!Config.IsCache || IsCacheError) return false;
+            var redisdb = GetDatabase();
+            if (IsCacheError) return false;
+            return redisdb.SetRemove(Config.Name + key, name);
+        }
+
+        /// <summary>
+        /// Hash列表 Name 删除
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        public static bool SetDayDelete(string key, string name)
+        {
+            if (!Config.IsCache || IsCacheError) return false;
+            var redisdb = GetDatabase();
+            if (IsCacheError) return false;
+            key = key + DateTime.Now.Date.ToString("yyyy-MM-dd");
+            return redisdb.SetRemove(Config.Name + key, name);
+        }
+
         #endregion
 
         #region List 有序存储数据

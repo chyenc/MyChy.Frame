@@ -38,6 +38,7 @@
     <Compile Include="Helper\CfgConfig.cs" />
     <Compile Include="Helper\CookieHelper.cs" />
     <Compile Include="Helper\DayTimeHelper.cs" />
+    <Compile Include="Helper\EncryptServerHelper.cs" />
     <Compile Include="Helper\EnumExtensions.cs" />
     <Compile Include="Helper\IOFiles.cs" />
     <Compile Include="Helper\LogHelper.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="Helper\TypeExtensions.cs" />
     <Compile Include="Helper\WebExtends.cs" />
     <Compile Include="Helper\WebHelper.cs" />
+    <Compile Include="Model\ReceiptEncryptModel.cs" />
     <Compile Include="Model\WebCacheConfig.cs" />
     <Compile Include="ObjectExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
