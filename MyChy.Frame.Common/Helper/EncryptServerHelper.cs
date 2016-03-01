@@ -45,5 +45,21 @@ namespace MyChy.Frame.Common.Helper
             var receiptresult = StringHelper.Deserialize<T>(orgStr);
             return receiptresult;
         }
+
+        /// <summary>
+        /// 解密返回结果
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="encrypt"></param>
+        /// <returns></returns>
+        public static T ResultEncrypt<T>(ReceiptEncryptModel encrypt)
+        {
+            if (string.IsNullOrEmpty(encrypt.Encrypt)) return default(T);
+            encrypt.Encrypt = encrypt.Encrypt.Replace(" ", "+");
+            var outputb = Convert.FromBase64String(encrypt.Encrypt);
+            var orgStr = Encoding.UTF8.GetString(outputb);
+            var receiptresult = StringHelper.Deserialize<T>(orgStr);
+            return receiptresult;
+        }
     }
 }

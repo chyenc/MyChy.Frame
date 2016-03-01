@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using MyChy.Frame.Common.Redis;
 using NUnit.Framework;
@@ -96,11 +97,15 @@ namespace MyChy.Frame.Test
 
             string key = "Hash";
             string name =String.Empty;
+            IList<string> namelist=new List<string>();
             for (int i = 0; i < 10; i++)
             {
                 name = Guid.NewGuid().ToString("N");
+                namelist.Add(i.ToString());
                 RedisServer.HashAddCache(key, i.ToString(), name);
             }
+            IList<string> ss = RedisServer.HashGetCache<string>(key, namelist);
+
             var xx = RedisServer.HashGetCache<string>(key, "1");
             RedisServer.HashDelete(key, "1");
             xx = RedisServer.HashGetCache<string>(key, "1");
@@ -123,6 +128,23 @@ namespace MyChy.Frame.Test
             //var yy = RedisServer.HashGetCache<string>(key, "20");
 
 
+        }
+
+        [Test]
+        public void SortedTest()
+        {
+            string key = "SortedTest";
+            for (var i = 0; i < 10; i++)
+            {
+                RedisServer.SortedAddCache(key, i.ToString(), i);
+            }
+            var list = RedisServer.SortedSetRangeByRankDescendingCache(key, 0, 5);
+            var ss= RedisServer.SortedSetIncrementCache(key,"1",100 );
+            ss = RedisServer.SortedSetIncrementCache(key, "2", 10);
+
+            ss = RedisServer.SortedSetIncrementCache(key, "5", 2);
+
+            list = RedisServer.SortedSetRangeByRankDescendingCache(key, 0, 5);
         }
 
         public class Tests

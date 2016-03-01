@@ -17,7 +17,7 @@ namespace MyChy.Frame.Common
     {
         private static readonly WebCacheConfig Config = null;
 
-        public static readonly bool IsCache = false;
+        public static readonly bool IsCache;
 
         static WebCache()
         {
@@ -34,13 +34,27 @@ namespace MyChy.Frame.Common
         /// 获取缓存
         /// </summary>
         /// <param name="cacheKey"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static T GetCache<T>(string cacheKey,T def)
+        {
+            if (!Config.IsCache) return default(T);
+            var objCache = HttpRuntime.Cache;
+            var obj = objCache[cacheKey];
+            return obj.To<T>(def);
+        }
+
+        /// <summary>
+        /// 获取缓存
+        /// </summary>
+        /// <param name="cacheKey"></param>
         /// <returns></returns>
         public static T GetCache<T>(string cacheKey)
         {
             if (!Config.IsCache) return default(T);
             var objCache = HttpRuntime.Cache;
             var obj = objCache[cacheKey];
-            return StringToObj<T>(obj);
+            return obj.To<T>();
         }
 
 
@@ -109,21 +123,6 @@ namespace MyChy.Frame.Common
             objCache.Insert(cacheKey, objObject, null, time, TimeSpan.Zero);
         }
 
-
-        /// <summary>
-        /// 字符转化成类
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        private static T StringToObj<T>(object obj)
-        {
-            if (obj != null)
-            {
-                return (T)obj;
-            }
-            return default(T);
-        }
 
         #endregion
     }

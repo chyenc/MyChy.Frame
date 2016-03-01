@@ -93,15 +93,9 @@ namespace MyChy.Frame.Common
         /// <returns>如果转换失败将返回 T 的默认值</returns>
         public static T To<T>(this object val)
         {
-            if (val != null)
-            {
-                return val.To<T>(default(T));
-            }
-            else
-            {
-                return default(T);
-            }
+            return val != null ? val.To<T>(default(T)) : default(T);
         }
+
         /// <summary>
         /// 将字符转换成自己的类型
         /// </summary>
@@ -115,17 +109,14 @@ namespace MyChy.Frame.Common
             if (val is T)
                 return (T)val;
 
-            Type type = typeof(T);
+            var type = typeof(T);
             try
             {
                 if (type.BaseType == typeof(Enum))
                 {
                     return (T)Enum.Parse(type, val.ToString(), true);
                 }
-                else
-                {
-                    return (T)Convert.ChangeType(val, type);
-                }
+                return (T)Convert.ChangeType(val, type);
             }
             catch
             {

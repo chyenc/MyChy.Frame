@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Security;
+using MyChy.Frame.Common.Helper;
 
 namespace MyChy.Frame.Common
 {
@@ -25,8 +26,8 @@ namespace MyChy.Frame.Common
         {
             try
             {
-                if (sKey.Length>8)
-                sKey = sKey.Substring(0, 8);
+                sKey = StringHelper.StringQuantity(sKey, 8);
+
 
                 var des = new DESCryptoServiceProvider();
                 var inputByteArray = Encoding.Default.GetBytes(pToEncrypt);
@@ -60,8 +61,7 @@ namespace MyChy.Frame.Common
         {
             try
             {
-                if (sKey.Length > 8)
-                    sKey = sKey.Substring(0, 8);
+                sKey = StringHelper.StringQuantity(sKey, 8);
 
                 var des = new
                     DESCryptoServiceProvider();

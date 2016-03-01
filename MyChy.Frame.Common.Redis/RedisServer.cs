@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using MyChy.Frame.Common.Helper;
 using StackExchange.Redis;
 
@@ -83,7 +86,7 @@ namespace MyChy.Frame.Common.Redis
                 LogHelper.Log(exception);
                 IsCacheError = true;
             }
-            
+
             return null;
         }
 
@@ -275,7 +278,7 @@ namespace MyChy.Frame.Common.Redis
         {
             if (!Config.IsCache || IsCacheError) return -1;
             var redisdb = Redis.GetDatabase();
-     
+
             return IsCacheError ? -1 : redisdb.StringIncrement(Config.Name + key, cardinal);
         }
 
@@ -319,6 +322,20 @@ namespace MyChy.Frame.Common.Redis
         #endregion
 
         #region Set 无序存储数组
+
+        ///// <summary>
+        ///// Set列表增加数据
+        ///// </summary>
+        ///// <param name="key"></param>
+        ///// <param name="objObject">数据</param>
+        //public static void SetGetCache(string key)
+        //{
+        //    if (!Config.IsCache || IsCacheError) return;
+        //    var redisdb = GetDatabase();
+        //    var obj = SerializeHelper.ObjToString(objObject);
+        //    if (IsCacheError) return;
+        //    redisdb.SetAdd(Config.Name + key, obj);
+        //}
 
         /// <summary>
         /// Set列表增加数据
@@ -485,7 +502,7 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="key"></param>
         /// <param name="name"></param>
         /// <param name="objObject">数据</param>
-        public static void HashAddCache(string key,string name,object objObject)
+        public static void HashAddCache(string key, string name, object objObject)
         {
             if (!Config.IsCache || IsCacheError) return;
             var redisdb = GetDatabase();
@@ -493,7 +510,6 @@ namespace MyChy.Frame.Common.Redis
             if (IsCacheError) return;
             var hashlist = new HashEntry[] { new HashEntry(name, obj) };
             redisdb.HashSet(Config.Name + key, hashlist);
-
         }
 
 
@@ -516,6 +532,26 @@ namespace MyChy.Frame.Common.Redis
         }
 
 
+        ///// <summary>
+        ///// Hash列表增加数据
+        ///// </summary>
+        ///// <param name="key"></param>
+        ///// <param name="list"></param>
+        //public static void HashAddCacheAsync(string key,IDictionary<string,object> list)
+        //{
+        //    if (!Config.IsCache || IsCacheError) return;
+        //    var redisdb = GetDatabase();
+        //    var obj = SerializeHelper.ObjToString(objObject);
+        //    if (IsCacheError) return;
+        //    var hashlist = new HashEntry[] { new HashEntry(name, obj) };
+        //    foreach (var i in list)
+        //    {
+        //        hashlist.
+        //    }
+        //    redisdb.HashSetAsync(Config.Name + key, hashlist);
+
+        //}
+
         /// <summary>
         /// Hash列表 Name 值
         /// </summary>
@@ -526,8 +562,23 @@ namespace MyChy.Frame.Common.Redis
             if (!Config.IsCache || IsCacheError) return default(T);
             var redisdb = GetDatabase();
             if (IsCacheError) return default(T);
-            var obj=redisdb.HashGet(Config.Name + key, name);
+            var obj = redisdb.HashGet(Config.Name + key, name);
             return SerializeHelper.StringToObj<T>(obj);
+        }
+
+        /// <summary>
+        /// Hash列表 Name 值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        public static List<T> HashGetCache<T>(string key,IList<string> name)
+        {
+            if (!Config.IsCache || IsCacheError) return null;
+            var redisdb = GetDatabase();
+            if (IsCacheError) return null;
+            IList<RedisValue> list = name.Select(i => (RedisValue)i).ToList();
+            var obj = redisdb.HashGet(Config.Name + key, list.ToArray());
+            return obj.Select(i => SerializeHelper.StringToObj<T>(i)).ToList();
         }
 
         /// <summary>
@@ -598,7 +649,7 @@ namespace MyChy.Frame.Common.Redis
         public static void HashDayAddCacheAsync(string key, string name, string objObject, bool isDelYesterday = false)
         {
             if (!Config.IsCache || IsCacheError) return;
-            var redisdb = GetDatabase();
+            GetDatabase();
             if (IsCacheError) return;
             if (isDelYesterday)
             {
@@ -646,6 +697,100 @@ namespace MyChy.Frame.Common.Redis
         {
             key = key + DateTime.Now.Date.ToString("yyyy-MM-dd");
             return HashDelete(key, name);
+        }
+
+        #endregion
+
+        #region zset
+
+        /// <summary>
+        /// Sorted列表增加数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject">数据</param>
+        /// <param name="score"></param>
+        public static void SortedAddCache(string key, string objObject,int score)
+        {
+            if (!Config.IsCache || IsCacheError) return;
+            var redisdb = GetDatabase();
+            var obj = SerializeHelper.ObjToString(objObject);
+            if (IsCacheError) return;
+            redisdb.SortedSetAdd(Config.Name + key, obj, score);
+        }
+
+        /// <summary>
+        /// Sorted列表移除数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject">数据</param>
+        public static void SortedDeleteCache(string key, string objObject)
+        {
+            if (!Config.IsCache || IsCacheError) return;
+            var redisdb = GetDatabase();
+            var obj = SerializeHelper.ObjToString(objObject);
+            if (IsCacheError) return;
+            redisdb.SortedSetRemove(Config.Name + key, obj);
+        }
+
+
+        /// <summary>
+        /// Sorted列表原子增加排序数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject">数据</param>
+        /// <param name="score"></param>
+        public static double SortedSetIncrementCache(string key, string objObject, int score)
+        {
+            if (!Config.IsCache || IsCacheError) return 0;
+            var redisdb = GetDatabase();
+            var obj = SerializeHelper.ObjToString(objObject);
+            if (IsCacheError) return 0;
+            return redisdb.SortedSetIncrement(Config.Name + key, obj, score);
+        }
+
+        /// <summary>
+        ///  Sorted列表原子减排序数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="objObject">数据</param>
+        /// <param name="score"></param>
+        public static double SortedSetDecrementCache(string key, string objObject, int score)
+        {
+            if (!Config.IsCache || IsCacheError) return 0;
+            var redisdb = GetDatabase();
+            var obj = SerializeHelper.ObjToString(objObject);
+            if (IsCacheError) return 0;
+            return redisdb.SortedSetIncrement(Config.Name + key, obj, score);
+        }
+
+        /// <summary>
+        ///  Sorted列表原子减排序数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="statr">开始位置</param>
+        /// <param name="stop">结束位置</param>
+        public static IList<string> SortedSetRangeByRankCache(string key, long statr, long stop)
+        {
+            if (!Config.IsCache || IsCacheError) return null;
+            var redisdb = GetDatabase();
+            if (IsCacheError) return null;
+            var list=redisdb.SortedSetRangeByRank(Config.Name + key, statr,stop);
+            return list.ToStringArray();
+        }
+
+        /// <summary>
+        ///  Sorted列表原子减排序数据
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="statr">开始位置</param>
+        /// <param name="stop">结束位置</param>
+        public static IList<string> SortedSetRangeByRankDescendingCache(string key, long statr, long stop)
+        {
+            if (!Config.IsCache || IsCacheError) return null;
+            var redisdb = GetDatabase();
+            if (IsCacheError) return null;
+            var list = redisdb.SortedSetRangeByRank(Config.Name + key, statr, stop,Order.Descending);
+            return list.ToStringArray();
         }
 
         #endregion

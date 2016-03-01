@@ -70,5 +70,18 @@ namespace MyChy.Frame.Common.Helper
         {
             return JsonConvert.SerializeObject(obj);
         }
+
+        /// <summary>
+        /// 制定字符串数量
+        /// </summary>
+        /// <returns></returns>
+        public static string StringQuantity(string value,int length)
+        {
+            if (value.Length != length)
+            {
+                value = value.Length < length ? value.PadLeft(length, '0') : value.Substring(0, length);
+            }
+            return value;
+        }
     }
 }

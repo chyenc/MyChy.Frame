@@ -97,6 +97,7 @@
     <Compile Include="EnterpriseLibraryTest.cs" />
     <Compile Include="RedisTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafeSecurityTest.cs" />
     <Compile Include="SqlTest.cs" />
     <Compile Include="WebFromTest.cs" />
   </ItemGroup>

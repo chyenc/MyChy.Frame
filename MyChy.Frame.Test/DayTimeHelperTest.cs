@@ -8,6 +8,7 @@ using NUnit.Framework;
 
 namespace MyChy.Frame.Test
 {
+   
     [TestFixture]
     public class DayTimeHelperTest
     {
@@ -21,6 +22,9 @@ namespace MyChy.Frame.Test
             int xx = DayTimeHelper.CalculatingDifferenceTicksSecond(tokin);
             xx = DayTimeHelper.CalculatingDifferenceTicksMillisecond(tokin);
 
-        }
+                 //默认密钥向量
+      
+
+    }
     }
 }

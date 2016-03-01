@@ -96,5 +96,19 @@ namespace MyChy.Frame.Common.Helper
             return ts.TotalMilliseconds.To<int>();
 
         }
+
+        /// <summary>
+        /// 计算时间截差值 秒
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static int CalculatingDifferenceSecond(DateTime time)
+        {
+            var ts1 = new TimeSpan(DateTime.Now.Ticks);
+            var ts2 = new TimeSpan(time.Ticks);
+            var ts = ts2.Subtract(ts1).Duration();
+            return ts.TotalSeconds.To<int>();
+
+        }
     }
 }

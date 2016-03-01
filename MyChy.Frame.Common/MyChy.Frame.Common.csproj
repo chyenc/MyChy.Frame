@@ -40,6 +40,7 @@
     <Compile Include="Helper\DayTimeHelper.cs" />
     <Compile Include="Helper\EncryptServerHelper.cs" />
     <Compile Include="Helper\EnumExtensions.cs" />
+    <Compile Include="Helper\ImageCode.cs" />
     <Compile Include="Helper\IOFiles.cs" />
     <Compile Include="Helper\LogHelper.cs" />
     <Compile Include="Helper\MathematicsHelper.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Helper\WebExtends.cs" />
     <Compile Include="Helper\WebHelper.cs" />
     <Compile Include="Model\ReceiptEncryptModel.cs" />
+    <Compile Include="Model\ResultBaseModel.cs" />
     <Compile Include="Model\WebCacheConfig.cs" />
     <Compile Include="ObjectExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +73,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.XML" />
   </ItemGroup>
