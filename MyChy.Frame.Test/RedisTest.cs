@@ -72,7 +72,9 @@ namespace MyChy.Frame.Test
                 ss1 = RedisServer.SetDayContainsCache(key, mobile);
 
             }
-         
+
+            RedisServer.SetDayAddCache(key, mobile, true,"yyyy-MM-d");
+
             for (int i = 0; i < 100000; i++)
             {
                 mobile = ss.ToString();
@@ -95,23 +97,62 @@ namespace MyChy.Frame.Test
 
 
 
-            string key = "Hash";
-            string name =String.Empty;
-            IList<string> namelist=new List<string>();
-            for (int i = 0; i < 10; i++)
+            var key = "Hash";
+            var ss1 = RedisServer.HashGetCache<long>(key, "1",-1);
+            if (ss1 == -1)
             {
-                name = Guid.NewGuid().ToString("N");
-                namelist.Add(i.ToString());
-                RedisServer.HashAddCache(key, i.ToString(), name);
+                RedisServer.HashAddCache(key, "1", 0);
             }
-            IList<string> ss = RedisServer.HashGetCache<string>(key, namelist);
+            ss1 = RedisServer.HashGetCache<long>(key, "1", -1);
+            ss1 = RedisServer.HashIncrementCache(key, "1", 1);
 
-            var xx = RedisServer.HashGetCache<string>(key, "1");
-            RedisServer.HashDelete(key, "1");
-            xx = RedisServer.HashGetCache<string>(key, "1");
-            RedisServer.HashAddCache(key, "1", name);
-            xx = RedisServer.HashGetCache<string>(key, "1");
+            ss1 = RedisServer.HashGetCache<long>(key, "1", -1);
 
+            ss1 = RedisServer.HashIncrementCache(key, "1", 1);
+
+            ss1 = RedisServer.HashGetCache<long>(key, "1", -1);
+
+            //var time = RedisServer.HashGetCache<DateTime>(key, "time1");
+
+            //if (time <= DateTime.MinValue)
+            //{
+            //    time = DateTime.Now;
+            //}
+
+            //RedisServer.HashAddCacheAsync(key, "time1", time);
+
+            //time = RedisServer.HashGetCache<DateTime>(key, "time1");
+
+            //string name =String.Empty;
+            //IList<string> namelist=new List<string>();
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    name = Guid.NewGuid().ToString("N");
+            //    namelist.Add(i.ToString());
+            //    RedisServer.HashAddCache(key, i.ToString(), name);
+            //}
+            //IList<string> ss = RedisServer.HashGetCache<string>(key, namelist);
+
+            //var xx = RedisServer.HashGetCache<string>(key, "1");
+            //RedisServer.HashDelete(key, "1");
+            //xx = RedisServer.HashGetCache<string>(key, "1");
+            //RedisServer.HashAddCache(key, "1", name);
+            //xx = RedisServer.HashGetCache<string>(key, "1");
+
+            //key = "HashIncrementCache";
+            //for (var i = 0; i < 10; i++)
+            //{
+            //    RedisServer.HashIncrementDayCache(key, i.ToString(), i);
+            //}
+
+            //var ss1= RedisServer.HashIncrementDayCache(key,"1", 1);
+            //ss1 = RedisServer.HashIncrementDayCache(key, "1", 1);
+            //ss1 = RedisServer.HashIncrementDayCache(key, "1", 1);
+            //ss1 = RedisServer.HashIncrementCache(key, "1", 1);
+            //ss1 = RedisServer.HashIncrementCache(key, "1", 1);
+
+            //ss1 = RedisServer.HashGetCache<long>(key, "1");
+            //ss1 = RedisServer.HashDayGetCache<long>(key, "1");
 
             //for (int i = 0; i < 100; i++)
             //{

@@ -49,7 +49,6 @@ namespace MyChy.Frame.Common.Redis
         /// 字符转化成类
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="ty"></param>
         /// <param name="value"></param>
         /// <returns></returns>
         public static T StringToObj<T>(string value)
@@ -107,6 +106,70 @@ namespace MyChy.Frame.Common.Redis
                 return (T)result;
             }
             return default(T);
+        }
+
+        /// <summary>
+        /// 字符转化成类
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static T StringToObj<T>(string value,T def)
+        {
+            object result;
+            if (string.IsNullOrEmpty(value))
+            {
+                return (T)def;
+            }
+            try
+            {
+                var ty = typeof(T);
+                var ty1 = ty.BaseType;
+                if ((ty1 != null) && (ty1.Name == "ValueType"))
+                {
+                    result = JsonConvert.DeserializeObject(value, ty);
+                }
+                else
+                {
+                    if ((ty.Name == "String") || (ty.Name == "StringBuilder"))
+                    {
+                        if (ty.Name == "String")
+                        {
+                            result = value.ToString();
+                        }
+                        else
+                        {
+                            var sb = new StringBuilder();
+                            sb.Append(value);
+                            result = sb;
+                        }
+                    }
+                    else
+                    {
+                        if ((value.Substring(0, 1) == "{") || (value.Substring(0, 2) == "[{"))
+                        {
+                            result = JsonConvert.DeserializeObject<T>(value);
+                        }
+                        else
+                        {
+                            var memStream2 = new MemoryStream(Convert.FromBase64String(value));
+                            var formatter = new BinaryFormatter();
+                            result = formatter.Deserialize(memStream2);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LogHelper.Log(e);
+                result = null;
+            }
+            if (result != null)
+            {
+                return (T)result;
+            }
+            return (T)def;
         }
     }
 }

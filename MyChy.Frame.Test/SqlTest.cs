@@ -18,7 +18,9 @@ namespace MyChy.Frame.Test
 
             public Wehy10000Sql()
             {
-                _db = DatabaseFactory.CreateDatabase("ConnectionHy10000");
+               // _db = DatabaseFactory.CreateDatabase("ConnectionHy10000");
+                var factory = new DatabaseProviderFactory();
+                _db = factory.Create("ConnectionHy10000");
             }
 
             public int Run(string openid)
