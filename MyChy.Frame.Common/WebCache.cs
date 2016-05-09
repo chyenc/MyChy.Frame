@@ -33,27 +33,27 @@ namespace MyChy.Frame.Common
         /// <summary>
         /// 获取缓存
         /// </summary>
-        /// <param name="cacheKey"></param>
+        /// <param name="key"></param>
         /// <param name="def"></param>
         /// <returns></returns>
-        public static T GetCache<T>(string cacheKey,T def)
+        public static T GetCache<T>(string key,T def)
         {
             if (!Config.IsCache) return default(T);
             var objCache = HttpRuntime.Cache;
-            var obj = objCache[cacheKey];
+            var obj = objCache[key];
             return obj.To<T>(def);
         }
 
         /// <summary>
         /// 获取缓存
         /// </summary>
-        /// <param name="cacheKey"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public static T GetCache<T>(string cacheKey)
+        public static T GetCache<T>(string key)
         {
             if (!Config.IsCache) return default(T);
             var objCache = HttpRuntime.Cache;
-            var obj = objCache[cacheKey];
+            var obj = objCache[key];
             return obj.To<T>();
         }
 
@@ -61,36 +61,36 @@ namespace MyChy.Frame.Common
         /// <summary>
         /// 添加缓存 10分钟
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
-        public static void SetCache(string cacheKey, object objObject)
+        public static void SetCache(string key, object objObject)
         {
             var time = DateTime.Now.AddMinutes(Config.CacheMinute);
-            SetCache(cacheKey, objObject, time);
+            SetCache(key, objObject, time);
         }
 
         /// <summary>
         /// 添加缓存 指定时间
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
         /// <param name="minutes">时间</param>
-        public static void SetCache(string cacheKey, object objObject, int minutes)
+        public static void SetCache(string key, object objObject, int minutes)
         {
             var time = DateTime.Now.AddMinutes((double)minutes);
-            SetCache(cacheKey, objObject, time);
+            SetCache(key, objObject, time);
         }
 
         /// <summary>
         /// 添加缓存 指定时间
         /// </summary>
-        /// <param name="cacheKey">KEY</param>
+        /// <param name="key">KEY</param>
         /// <param name="objObject">数据</param>
         /// <param name="seconds">秒</param>
-        public static void SetCacheSeconds(string cacheKey, object objObject, int seconds)
+        public static void SetCacheSeconds(string key, object objObject, int seconds)
         {
             var time = DateTime.Now.AddSeconds((double)seconds);
-            SetCache(cacheKey, objObject, time);
+            SetCache(key, objObject, time);
         }
 
 
@@ -98,12 +98,12 @@ namespace MyChy.Frame.Common
         /// <summary>
         /// 移除缓存
         /// </summary>
-        /// <param name="cacheKey"></param>
-        public static void Remove(string cacheKey)
+        /// <param name="key"></param>
+        public static void Remove(string key)
         {
             if (!Config.IsCache) return;
             var objCache = HttpRuntime.Cache;
-            objCache.Remove(cacheKey);
+            objCache.Remove(key);
         }
 
 
@@ -112,15 +112,15 @@ namespace MyChy.Frame.Common
         /// <summary>
         /// 添加缓存 
         /// </summary>
-        /// <param name="cacheKey"></param>
+        /// <param name="key"></param>
         /// <param name="objObject"></param>
         /// <param name="time"></param>
-        private static void SetCache(string cacheKey, object objObject, DateTime time)
+        private static void SetCache(string key, object objObject, DateTime time)
         {
             if (!Config.IsCache) return;
             if (objObject == null) return;
             var objCache = HttpRuntime.Cache;
-            objCache.Insert(cacheKey, objObject, null, time, TimeSpan.Zero);
+            objCache.Insert(key, objObject, null, time, TimeSpan.Zero);
         }
 
 

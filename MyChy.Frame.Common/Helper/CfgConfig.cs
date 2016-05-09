@@ -42,7 +42,7 @@ namespace MyChy.Frame.Common.Helper
         {
             var config = Configuration.LoadFromFile(file);
             //var sections = config[section];
-            config[section] = Section.FromObject(section, obj);
+            //config[section] = Section.FromObject(section, obj);
             config.SaveToFile(file);
         }
     }

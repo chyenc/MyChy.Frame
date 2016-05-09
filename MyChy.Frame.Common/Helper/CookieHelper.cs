@@ -19,18 +19,17 @@ namespace MyChy.Frame.Common.Helper
         /// <summary>
         /// 设置Cookie
         /// </summary>
-        /// <param name="cookiename"></param>
-        /// <param name="cookievalue"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
         /// <param name="domainname">如果为空，则设置当前域名</param>
-        /// <param name="hour"></param>
         /// <param name="minute"></param>
         /// <returns></returns>
-        public static bool SetCookie(string cookiename, string cookievalue, string domainname, int hour, int minute)
+        public static bool Set(string name, string value, string domainname,int minute)
         {
-            if (cookievalue == null) return false;
+            if (value == null) return false;
             //设定cookie 过期时间.
-            DateTime dtExpiry = DateTime.Now.AddHours(hour).AddMinutes(minute);
-            var httpCookie = HttpContext.Current.Response.Cookies[cookiename];
+            var dtExpiry = DateTime.Now.AddMinutes(minute);
+            var httpCookie = HttpContext.Current.Response.Cookies[name];
             if (httpCookie == null) return false;
             HttpCookie sessionCookie = null;
 
@@ -45,7 +44,7 @@ namespace MyChy.Frame.Common.Helper
             //设定cookie 域名.
             if (domainname.Length == 0)
             {
-                string domain = string.Empty;
+                var domain = string.Empty;
                 if (HttpContext.Current.Request.Params["HTTP_HOST"] != null)
                 {
                     //domain = "www.elong.com";
@@ -65,7 +64,7 @@ namespace MyChy.Frame.Common.Helper
                 httpCookie.Domain = domainname;
             }
 
-            httpCookie.Value = cookievalue;
+            httpCookie.Value = value;
 
             //如果cookie总数超过20 个, 重写ASP.NET_SessionId, 以防Session 丢失.
             if (HttpContext.Current.Request.Cookies.Count <= 20 || sessionCookie == null) return true;
@@ -75,53 +74,34 @@ namespace MyChy.Frame.Common.Helper
             return true;
         }
 
-        public static bool SetCookie(string cookiename, string cookievalue, string domainname)
+        public static bool Set(string name, string value, string domainname)
         {
-            if (cookievalue == null) return false;
-            var httpCookie = HttpContext.Current.Response.Cookies[cookiename];
-            if (httpCookie != null)
-            {
-                if (domainname.Length == 0)
-                {
-                    var domain = string.Empty;
-                    if (HttpContext.Current.Request.Params["HTTP_HOST"] != null)
-                    {
-                        //domain = "www.elong.com";
-                        domain = HttpContext.Current.Request.Params["HTTP_HOST"].ToString();
-                    }
+           return Set(name, value, domainname, 60*24*360);
+        }
 
-                    if (domain.IndexOf(".", System.StringComparison.Ordinal) > -1)
-                    {
-                        var index = domain.IndexOf(".", System.StringComparison.Ordinal);
-                        domain = domain.Substring(index + 1);
-                        httpCookie.Domain = domain;
-                    }
-                }
-                else
-                {
-                    httpCookie.Domain = domainname;
-                }
-                httpCookie.Value = cookievalue;
-            }
-            return true;
+
+        public static bool Set(string name, object value, string domainname)
+        {
+            var vals = SerializeHelper.ObjToString(value);
+            return Set(name, vals, domainname);
 
         }
 
-        /// <summary>
+        /// <summary> 
         /// 获取Cookie
         /// </summary>
-        /// <param name="cookiekey"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public static string GetCookie(string cookiekey)
+        public static string Get(string key)
         {
             string cookyval;
             try
             {
-                if (HttpContext.Current.Request.Cookies[cookiekey] == null)
+                if (HttpContext.Current.Request.Cookies[key] == null)
                 {
                     return "";
                 }
-                cookyval = HttpContext.Current.Request.Cookies[cookiekey].Value;
+                cookyval = HttpContext.Current.Request.Cookies[key].Value;
             }
             catch
             {
@@ -131,29 +111,52 @@ namespace MyChy.Frame.Common.Helper
         }
 
         /// <summary>
+        /// 获取缓存
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static T Get<T>(string key, T def)
+        {
+            var vals = Get(key);
+            return SerializeHelper.StringToObj<T>(vals, def);
+        }
+
+        /// <summary>
+        /// 获取缓存
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static T Get<T>(string key)
+        {
+            var vals = Get(key);
+            return SerializeHelper.StringToObj<T>(vals);
+        }
+
+
+        /// <summary>
         /// 
         /// </summary>
-        /// <param name="cookiename"></param>
-        /// <param name="cookievalue"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
         /// <param name="domainname"></param>
-        /// <param name="hour"></param>
         /// <param name="minute"></param>
         /// <returns></returns>
-        public static bool SetCookie3Des(string cookiename, string cookievalue, string domainname, int hour, int minute)
+        public static bool Set3Des(string name, string value, string domainname, int minute)
         {
-            cookievalue = SafeSecurity.EncryptDes(cookievalue, Des3Key);
-            return SetCookie(cookiename, cookievalue, domainname, hour, minute);
+            value = SafeSecurity.EncryptDes(value, Des3Key);
+            return Set(name, value, domainname, minute);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cookiekey"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public static string GetCookie3Des(string cookiekey)
+        public static string Get3Des(string key)
         {
-            var cookyval = GetCookie(cookiekey);
-            if (!string.IsNullOrEmpty(cookiekey))
+            var cookyval = Get(key);
+            if (!string.IsNullOrEmpty(key))
             {
                 cookyval = SafeSecurity.DecryptDes(cookyval, Des3Key);
             }
@@ -163,10 +166,10 @@ namespace MyChy.Frame.Common.Helper
         /// <summary>
         /// 清除Cookie
         /// </summary>
-        /// <param name="cookiekey"></param>
-        public static void RemoveCookie(string cookiekey)
+        /// <param name="key"></param>
+        public static void Remove(string key)
         {
-            SetCookie(cookiekey, "", "", -1, 0);
+            Set(key, "", "",0);
         }
     }
 }

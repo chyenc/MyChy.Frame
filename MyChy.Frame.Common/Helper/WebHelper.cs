@@ -64,7 +64,7 @@ namespace MyChy.Frame.Common.Helper
             }
             catch (Exception e)
             {
-                //logHelper.Log(e);
+                LogHelper.Log(e);
             }
 
             return retString;
@@ -81,7 +81,7 @@ namespace MyChy.Frame.Common.Helper
             var retString = string.Empty;
             try
             {
-                if (!String.IsNullOrEmpty(postDataStr))
+                if (!string.IsNullOrEmpty(postDataStr))
                 {
                     url = url + "?" + postDataStr;
                 }
@@ -118,7 +118,7 @@ namespace MyChy.Frame.Common.Helper
             }
             catch (Exception e)
             {
-                //logHelper.Log(e);
+                LogHelper.Log(e);
             }
 
             return retString;
@@ -180,6 +180,7 @@ namespace MyChy.Frame.Common.Helper
             }
             catch (Exception ex)
             {
+                LogHelper.Log(ex);
                 //logger.Error("Error uploading file", ex);
                 if (wresp != null)
                 {
@@ -240,13 +241,14 @@ namespace MyChy.Frame.Common.Helper
             try
             {
                 wresp = wr.GetResponse();
-                Stream stream2 = wresp.GetResponseStream();
-                StreamReader reader2 = new StreamReader(stream2);
+                var stream2 = wresp.GetResponseStream();
+                var reader2 = new StreamReader(stream2);
                 responseStr = reader2.ReadToEnd();
                 //logger.Error(string.Format("File uploaded, server response is: {0}", responseStr));
             }
             catch (Exception ex)
             {
+                LogHelper.Log(ex);
                 //logger.Error("Error uploading file", ex);
                 if (wresp != null)
                 {

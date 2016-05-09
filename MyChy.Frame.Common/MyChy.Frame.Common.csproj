@@ -44,6 +44,7 @@
     <Compile Include="Helper\IOFiles.cs" />
     <Compile Include="Helper\LogHelper.cs" />
     <Compile Include="Helper\MathematicsHelper.cs" />
+    <Compile Include="Helper\SerializeHelper.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\TypeExtensions.cs" />
     <Compile Include="Helper\WebExtends.cs" />

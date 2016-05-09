@@ -22,35 +22,30 @@ namespace MyChy.Frame.Common
         /// <returns></returns>
         public static object GetValueByType(Type ty, object value)
         {
-            if (value != null)
+            if (value == null) return null;
+            try
             {
-                try
-                {
-                    object result;
+                object result;
 
-                    if (ty.Name == "String" || ty.Name == "StringBuilder")
-                    {
-                        result = value.ToString();
-                    }
-                    else
-                    {
-                        if (ty == typeof(decimal))
-                        {
-                            ty = typeof(int);
-                        }
-
-                        var objvalue = string.Format("\"{0}\"", value);
-                        result = JsonConvert.DeserializeObject(objvalue, ty);
-                    }
-                    return result;
-                }
-                catch
+                if (ty.Name == "String" || ty.Name == "StringBuilder")
                 {
-                    return null;
+                    result = value.ToString();
                 }
+                else
+                {
+                    if (ty == typeof(decimal))
+                    {
+                        ty = typeof(int);
+                    }
+                    var objvalue = string.Format("\"{0}\"", value);
+                    result = JsonConvert.DeserializeObject(objvalue, ty);
+                }
+                return result;
             }
-
-            return null;
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -74,14 +69,8 @@ namespace MyChy.Frame.Common
         /// <returns>返回转换后的值</returns>
         public static object ChangeTypeValue(this object value, Type changeType)
         {
-            if (changeType.BaseType == typeof(Enum))
-            {
-                return Enum.Parse(changeType, value.ToString(), true);
-            }
-            else
-            {
-                return Convert.ChangeType(value, changeType);
-            }
+            return changeType.BaseType == typeof(Enum) ? 
+                Enum.Parse(changeType, value.ToString(), true) : Convert.ChangeType(value, changeType);
         }
 
         #region To T

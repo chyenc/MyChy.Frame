@@ -5,12 +5,11 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
-using MyChy.Frame.Common.Helper;
 using Newtonsoft.Json;
 
-namespace MyChy.Frame.Common.Redis
+namespace MyChy.Frame.Common.Helper
 {
-    internal class SerializeHelper
+    public class SerializeHelper
     {
         /// <summary>
         /// 类序列化成字符
@@ -19,7 +18,7 @@ namespace MyChy.Frame.Common.Redis
         /// <returns></returns>
         public static string ObjToString(object obj)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
             if (obj == null) return result;
             var ty = obj.GetType();
@@ -36,7 +35,7 @@ namespace MyChy.Frame.Common.Redis
                 }
                 else
                 {
-                     result = JsonConvert.SerializeObject(obj);
+                    result = JsonConvert.SerializeObject(obj);
                 }
 
             }
@@ -85,7 +84,7 @@ namespace MyChy.Frame.Common.Redis
                     {
                         if ((value.Substring(0, 1) == "{") || (value.Substring(0, 2) == "[{"))
                         {
-                            result =JsonConvert.DeserializeObject<T>(value);
+                            result = JsonConvert.DeserializeObject<T>(value);
                         }
                         else
                         {
@@ -115,7 +114,7 @@ namespace MyChy.Frame.Common.Redis
         /// <param name="value"></param>
         /// <param name="def"></param>
         /// <returns></returns>
-        public static T StringToObj<T>(string value,T def)
+        public static T StringToObj<T>(string value, T def)
         {
             object result;
             if (string.IsNullOrEmpty(value))
