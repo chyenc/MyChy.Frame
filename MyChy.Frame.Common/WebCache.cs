@@ -55,6 +55,7 @@ namespace MyChy.Frame.Common
             var objCache = HttpRuntime.Cache;
             var obj = objCache[key];
             return obj.To<T>();
+
         }
 
 
