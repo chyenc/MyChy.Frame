@@ -16,4 +16,13 @@ namespace MyChy.Frame.Common.Model
 
         public int Id { get; set; }
     }
+
+    public class EnumListModel
+    {
+        public string Title { get; set; }
+
+        public int Id { get; set; }
+
+        public bool IsCheck { get; set; }
+    }
 }

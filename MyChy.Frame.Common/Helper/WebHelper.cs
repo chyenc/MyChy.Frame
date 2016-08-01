@@ -302,6 +302,7 @@ namespace MyChy.Frame.Common.Helper
             try
             {
                 result = System.Web.HttpContext.Current.Request.Url.ToString();
+               
             }
             catch (Exception exception)
             {

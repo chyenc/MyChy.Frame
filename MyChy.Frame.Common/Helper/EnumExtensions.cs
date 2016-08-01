@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using MyChy.Frame.Common.Model;
 
 namespace MyChy.Frame.Common.Helper
 {
@@ -59,6 +60,30 @@ namespace MyChy.Frame.Common.Helper
 
             return values.ToList().Find(c => c.id == id).name;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static IList<EnumListModel> GetDescriptionList(this Type type, int? id)
+        {
+            var values = from Enum e in Enum.GetValues(type)
+                         select new EnumListModel() { Id = e.ToInt(), Title = e.ToDescription() };
+
+            if (id.GetValueOrDefault() <= 0) return values.ToList();
+            var idx = id.GetValueOrDefault();
+            var enumListModels = values.ToList();
+            foreach (var model in enumListModels.Where(model => model.Id == idx))
+            {
+                model.IsCheck = true;
+                break;
+            }
+            return enumListModels;
+        }
+
+
         /// <summary>
         ///     获取枚举项的Description特性的描述文字
         /// </summary>
