@@ -293,6 +293,20 @@ namespace MyChy.Frame.Common.Helper
         }
 
         /// <summary>
+        /// 判断IP是否合法 真合法
+        /// </summary>
+        /// <param name="listip"></param>
+        /// <returns></returns>
+        public static bool CheckIp(string listip)
+        {
+            if (string.IsNullOrEmpty(listip)) return true;
+            var list = listip.Split(',');
+            var ip = GetIp();
+            return list.Any(s => s == ip);
+
+        }
+
+        /// <summary>
         /// 获取当前URL
         /// </summary>
         /// <returns></returns>

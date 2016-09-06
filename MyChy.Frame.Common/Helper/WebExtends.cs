@@ -40,6 +40,51 @@ namespace MyChy.Frame.Common.Helper
             }
             return sb.ToString().TrimEnd('&').Substring(key.Length + 1);
         }
+
+
+        /// <summary>
+        /// 转换成URL参数
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        public static string ToOrderString(this IDictionary<object, object> dictionary)
+        {
+            var sb = new StringBuilder();
+            var dictionarys = dictionary.OrderBy(x => x.Key).ToList();
+            foreach (var key in dictionarys.Where(key => key.Key != null))
+            {
+                sb.Append(key.Key + "=" + key.Value + "&");
+            }
+            return sb.ToString().TrimEnd('&');
+        }
+
+
         #endregion
+
+        #region 转换成XML
+
+        /// <summary>
+        /// 转换成URL参数
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        public static string ToXmlString(this IDictionary<object, object> dictionary)
+        {
+            var sb = new StringBuilder();
+            sb.Append("<xml>");
+            foreach (var key in dictionary.Keys)
+            {
+                var value = dictionary[key];
+                if (value != null)
+                {
+                    sb.AppendFormat("<{0}>{1}</{0}>", key,value);
+                }
+            }
+            sb.Append("</xml>");
+            return sb.ToString();
+        }
+
+        #endregion
+
     }
 }

@@ -97,7 +97,7 @@ namespace MyChy.Frame.Common
         {
             var m5 = new MD5CryptoServiceProvider();
             //创建md5对象
-            var inputBye = Encoding.ASCII.GetBytes(strText);
+            var inputBye = Encoding.UTF8.GetBytes(strText);
             //使用ascii编码方式把字符串转化为字节数组．
             var outputBye = m5.ComputeHash(inputBye);
             var retStr = System.BitConverter.ToString(outputBye);
