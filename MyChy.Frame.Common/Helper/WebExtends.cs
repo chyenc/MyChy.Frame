@@ -58,6 +58,22 @@ namespace MyChy.Frame.Common.Helper
             return sb.ToString().TrimEnd('&');
         }
 
+        /// <summary>
+        /// 转换成URL参数
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        public static string ToOrderString(this IDictionary<string, string> dictionary)
+        {
+            var sb = new StringBuilder();
+            var dictionarys = dictionary.OrderBy(x => x.Key).ToList();
+            foreach (var key in dictionarys.Where(key => key.Key != null))
+            {
+                sb.Append(key.Key + "=" + key.Value + "&");
+            }
+            return sb.ToString().TrimEnd('&');
+        }
+
 
         #endregion
 

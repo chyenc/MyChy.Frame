@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="DataHelperBase.cs" />
     <Compile Include="ModelHelper.cs" />
+    <Compile Include="PageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

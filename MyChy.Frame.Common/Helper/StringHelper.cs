@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
@@ -52,6 +54,7 @@ namespace MyChy.Frame.Common.Helper
         }
 
 
+        #region Json反序列化
         /// <summary>
         /// 反序列化
         /// </summary>
@@ -72,7 +75,7 @@ namespace MyChy.Frame.Common.Helper
         {
             return JsonConvert.SerializeObject(obj);
         }
-
+        #endregion
         #region XML反序列化
 
         /// <summary>
@@ -134,6 +137,84 @@ namespace MyChy.Frame.Common.Helper
                 LogHelper.Log(e);
             }
             return str;
+        }
+
+        #endregion
+
+        #region XML 转 IDictionary<strng, object>
+
+        /// <summary>
+        /// XML 转 IDictionary
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <param name="isnull"></param>
+        /// <returns></returns>
+        public static IDictionary<string, string> XmlToIDictionary(string xml,bool isnull=false)
+        {
+            IDictionary<string, string> result = null;
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xml);
+                var selectSingleNode = xmlDoc.SelectSingleNode("xml");
+                if (selectSingleNode != null)
+                {
+                    result=new Dictionary<string, string>();
+                    var nodeList = selectSingleNode.ChildNodes;
+                    foreach (XmlNode xn in nodeList)
+                    {
+                        if (isnull)
+                        {
+                            if (!string.IsNullOrEmpty(xn.InnerText))
+                            {
+                                result.Add(xn.Name,xn.InnerText);
+                            }
+                        }
+                        else
+                        {
+                            result.Add(xn.Name, xn.InnerText);
+                        }
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                
+               LogHelper.Log(e);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// IDictionary 转 T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dict"></param>
+        /// <returns></returns>
+        public static T ModelByIDictionary<T>(IDictionary<string, string> dict)
+        {
+            var t = typeof(T);
+            var model = Activator.CreateInstance(t);
+            var col = TypeDescriptor.GetProperties(model);
+            var list = new HashSet<string>();
+            foreach (PropertyDescriptor item in col)
+            {
+                if (dict.ContainsKey(item.Name))
+                {
+                    list.Add(item.Name);
+                }
+            }
+            foreach (PropertyDescriptor item in col)
+            {
+                if (!list.Contains(item.Name)) continue;
+                var value = ObjectExtension.GetValueByType(item.PropertyType, dict[item.Name]);
+                if (value != null)
+                {
+                    item.SetValue(model, value);
+                }
+            }
+            return (T)model;
         }
 
         #endregion

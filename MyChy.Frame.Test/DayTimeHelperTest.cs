@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 using MyChy.Frame.Common;
 using MyChy.Frame.Common.Helper;
 using NUnit.Framework;
@@ -36,17 +39,34 @@ namespace MyChy.Frame.Test
             //ss = SafeSecurity.Md5Encrypt(str);
 
 
-          var   resultxml = @"<xml><return_code><![CDATA[SUCCESS]]></return_code>
-<return_msg><![CDATA[OK]]></return_msg>
-<appid><![CDATA[wxb7b2b05063232049]]></appid>
-<mch_id><![CDATA[10013670]]></mch_id>
-<nonce_str><![CDATA[jKj8ziE0D8AVpnpC]]></nonce_str>
-<sign><![CDATA[7EA8427B4A489BDC3F5265D244DB2DD2]]></sign>
-<result_code><![CDATA[SUCCESS]]></result_code>
-<prepay_id><![CDATA[wx20160906101859bcc6a266810014246892]]></prepay_id>
-<trade_type><![CDATA[JSAPI]]></trade_type>
+          var   resultxml = @"<xml>
+  <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
+  <attach><![CDATA[支付测试]]></attach>
+  <bank_type><![CDATA[CFT]]></bank_type>
+  <fee_type><![CDATA[CNY]]></fee_type>
+  <is_subscribe><![CDATA[Y]]></is_subscribe>
+  <mch_id><![CDATA[10000100]]></mch_id>
+  <nonce_str><![CDATA[5d2b6c2a8db53831f7eda20af46e531c]]></nonce_str>
+  <openid><![CDATA[oUpF8uMEb4qRXf22hE3X68TekukE]]></openid>
+  <out_trade_no><![CDATA[1409811653]]></out_trade_no>
+  <result_code><![CDATA[SUCCESS]]></result_code>
+  <return_code><![CDATA[SUCCESS]]></return_code>
+  <sign><![CDATA[B552ED6B279343CB493C5DD0D78AB241]]></sign>
+  <sub_mch_id><![CDATA[10000100]]></sub_mch_id>
+  <time_end><![CDATA[20140903131540]]></time_end>
+  <total_fee>1</total_fee>
+  <trade_type><![CDATA[JSAPI]]></trade_type>
+  <transaction_id><![CDATA[1004400740201409030005092168]]></transaction_id>
 </xml>";
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(resultxml);
+            XmlNodeList nodeList = xmlDoc.SelectSingleNode("xml").ChildNodes;
+            foreach (XmlNode xn in nodeList)
+            {
+                var ss = xn.Name;
+                ss = xn.InnerText;
 
+            }
             var payReturn = StringHelper.DeserializeXml<PayReturnModel>(resultxml);
 
         }
