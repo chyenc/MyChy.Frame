@@ -270,8 +270,40 @@ namespace MyChy.Frame.Common.Data
 
 
 
-
         private DataTable GetMySqlDataOne()
+        {
+            var sb = new StringBuilder();
+
+            if (PageSize < 1) { PageSize = 20; }
+            if (_pageIndex < 1) { _pageIndex = 1; }
+
+            var minid = (_pageIndex - 1) * PageSize;
+            var maxid = _pageIndex * PageSize;
+
+            if (QueryField == "*")
+            {
+                QueryField = "m.*";
+                TableName = TableName + " m ";
+            }
+            sb.AppendFormat("select * from");
+            sb.AppendFormat(" (SELECT TOP {2} ROW_NUMBER() OVER(ORDER BY {0} {1}) AS _rowid",
+                this.OrderField, _desc, maxid);
+            sb.AppendFormat(",{0} FROM {1} ", QueryField, this.TableName);
+            sb.AppendFormat(" where 1=1 {0} ) as _tab ", StrWhere);
+            sb.AppendFormat(" where _tab._rowid>@minid");
+
+            sb.Append(" order by _tab._rowid ");
+
+
+            SqlParameter[] parmeter = {
+                                new SqlParameter("@minid",minid),
+                               // new SqlParameter("@maxid",_pageIndex * PageSize),
+            };
+
+            return GetDataParms(sb.ToString(), parmeter);
+        }
+
+        private DataTable GetMySqlDataOne_old20160929()
         {
             var sb = new StringBuilder();
 
@@ -307,12 +339,40 @@ namespace MyChy.Frame.Common.Data
 
         private DataTable GetMySqlDataMore()
         {
+
+            if (PageSize < 1) { PageSize = 20; }
+            if (_pageIndex < 1) { _pageIndex = 1; }
+
+            var minid = (_pageIndex - 1) * PageSize;
+            var maxid = _pageIndex * PageSize;
+
+
+            var sb = new StringBuilder();
+            sb.Append("select * from (");
+            sb.AppendFormat(" SELECT  TOP {2}  ROW_NUMBER() OVER(ORDER BY {0} {1}) AS _ROWID,", this.OrderField, _desc, maxid);
+            sb.AppendFormat(" {0}", QueryField);
+            sb.AppendFormat(" from {0}", this.TableName);
+            sb.AppendFormat(" where  1=1  {0}", StrWhere);
+            sb.Append(" ) as _tab");
+            sb.Append(" where _rowid>@minid");
+            sb.Append(" order by _tab._ROWID");
+
+            SqlParameter[] parmeter = {
+                                new SqlParameter("@minid", minid),
+                               // new SqlParameter("@maxid",_pageIndex * PageSize),
+            };
+
+            return GetDataParms(sb.ToString(), parmeter);
+        }
+
+        private DataTable GetMySqlDataMore_old20160929()
+        {
             var sb = new StringBuilder();
             sb.Append("select * from (");
             sb.AppendFormat(" SELECT ROW_NUMBER() OVER(ORDER BY {0} {1}) AS _ROWID,", this.OrderField, _desc);
             sb.AppendFormat(" {0}", QueryField);
             sb.AppendFormat(" from {0}", this.TableName);
-            sb.AppendFormat(" where {0}", StrWhere.ToString());
+            sb.AppendFormat(" where  1=1  {0}", StrWhere.ToString());
             sb.Append(" ) as _tab");
             sb.Append(" where _rowid>@minid and _rowid<=@maxid");
             sb.Append(" order by _tab._ROWID");
@@ -324,8 +384,6 @@ namespace MyChy.Frame.Common.Data
 
             return GetDataParms(sb.ToString(), parmeter);
         }
-
-
         private DataTable GetDataParms(string sqltxt, SqlParameter[] parms)
         {
             SqlParameter[] allparms = null;

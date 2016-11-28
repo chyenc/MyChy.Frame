@@ -92,12 +92,13 @@ namespace MyChy.Frame.Common
         /// MD5加密字符串 32位
         /// </summary>
         /// <param name="strText"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static string Md5Encrypt(string strText)
+        public static string Md5Encrypt(string strText, Encoding encoding)
         {
             var m5 = new MD5CryptoServiceProvider();
             //创建md5对象
-            var inputBye = Encoding.UTF8.GetBytes(strText);
+            var inputBye = encoding.GetBytes(strText);
             //使用ascii编码方式把字符串转化为字节数组．
             var outputBye = m5.ComputeHash(inputBye);
             var retStr = System.BitConverter.ToString(outputBye);
@@ -105,6 +106,26 @@ namespace MyChy.Frame.Common
             return (retStr);
 
         }
+
+        /// <summary>
+        /// MD5加密字符串 32位
+        /// </summary>
+        /// <param name="strText"></param>
+        /// <returns></returns>
+        public static string Md5Encrypt(string strText)
+        {
+            return Md5Encrypt(strText, Encoding.UTF8);
+            //var m5 = new MD5CryptoServiceProvider();
+            ////创建md5对象
+            //var inputBye = Encoding.UTF8.GetBytes(strText);
+            ////使用ascii编码方式把字符串转化为字节数组．
+            //var outputBye = m5.ComputeHash(inputBye);
+            //var retStr = System.BitConverter.ToString(outputBye);
+            //retStr = retStr.Replace("-", "").ToLower();
+            //return (retStr);
+
+        }
+
 
         public static string SHA1(string strText)
         {

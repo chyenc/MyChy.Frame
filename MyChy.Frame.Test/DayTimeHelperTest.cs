@@ -19,6 +19,12 @@ namespace MyChy.Frame.Test
         [Test]
         public void Run()
         {
+            DayTimeHelper.CheckTicks(1476429498);
+            double s = (double)1476417251*1000;
+            var log = DateTime.Now.Ticks - 621356256000000000;
+            var s1s=log - s;
+
+
             //int ss = DayTimeHelper.SecondsRemainingDay();
             //DateTime da = DateTime.Now.AddSeconds(ss);
 
@@ -26,7 +32,7 @@ namespace MyChy.Frame.Test
             //int xx = DayTimeHelper.CalculatingDifferenceTicksSecond(tokin);
             //xx = DayTimeHelper.CalculatingDifferenceTicksMillisecond(tokin);
 
-                 //默认密钥向量
+            //默认密钥向量
 
             //var str =
             //    "appid=wxb7b2b05063232049&attach=测试&body=汇源果汁-微店商品&mch_id=10013670&notify_url=http://hy80299997.21move.net/we_pay1/&openid=o8KB3uEwEIye3ceovZRej1uG1rMM&out_trade_no=636087526758546138&spbill_create_ip=0.0.0.0&time_expire=20160907110541&time_start=20160906100541&total_fee=1&trade_type=JSAPI&key=830CF7DC0978411EBB252FA5E8FB33CB";
@@ -39,7 +45,7 @@ namespace MyChy.Frame.Test
             //ss = SafeSecurity.Md5Encrypt(str);
 
 
-          var   resultxml = @"<xml>
+            var   resultxml = @"<xml>
   <appid><![CDATA[wx2421b1c4370ec43b]]></appid>
   <attach><![CDATA[支付测试]]></attach>
   <bank_type><![CDATA[CFT]]></bank_type>

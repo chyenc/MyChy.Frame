@@ -116,6 +116,13 @@ namespace MyChy.Frame.Common.Redis
 
         }
 
+        public static void RemoveDay(string key)
+        {
+            //Remove(key);
+            key = key + DateTime.Now.Date.ToString("yyyy-MM-dd");
+            Remove(key);
+        }
+
         /// <summary>
         /// key是否存在
         /// </summary>
@@ -541,6 +548,19 @@ namespace MyChy.Frame.Common.Redis
             key = key + DateTime.Now.Date.ToString("yyyy-MM-dd");
             return HashGetCache<T>(key, name);
         }
+
+        /// <summary>
+        /// Hash列表 Name 值
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="name"></param>
+        /// <param name="defVal"></param>
+        public static T HashDayGetCache<T>(string key, string name, T defVal)
+        {
+            key = key + DateTime.Now.Date.ToString("yyyy-MM-dd");
+            return HashGetCache<T>(key, name, defVal);
+        }
+
 
         /// <summary>
         /// Hash列表 Name 是否存在

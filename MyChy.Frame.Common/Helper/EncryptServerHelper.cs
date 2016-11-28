@@ -35,15 +35,22 @@ namespace MyChy.Frame.Common.Helper
         public static T ResultEncrypt<T>(ReceiptEncryptModel encrypt, string receiptEncrypt)
         {
             if (string.IsNullOrEmpty(encrypt.Encrypt) || string.IsNullOrEmpty(encrypt.Sign)) return default(T);
-
-            encrypt.Encrypt = encrypt.Encrypt.Replace(" ", "+");
-            var key = encrypt.Encrypt + receiptEncrypt;
-            var sign = SafeSecurity.Sha1(key).ToLower();
-            if (encrypt.Sign != sign) return default(T);
-            var outputb = Convert.FromBase64String(encrypt.Encrypt);
-            var orgStr = Encoding.UTF8.GetString(outputb);
-            var receiptresult = StringHelper.Deserialize<T>(orgStr);
-            return receiptresult;
+            try
+            {
+                encrypt.Encrypt = encrypt.Encrypt.Replace(" ", "+");
+                var key = encrypt.Encrypt + receiptEncrypt;
+                var sign = SafeSecurity.Sha1(key).ToLower();
+                if (encrypt.Sign != sign) return default(T);
+                var outputb = Convert.FromBase64String(encrypt.Encrypt);
+                var orgStr = Encoding.UTF8.GetString(outputb);
+                var receiptresult = StringHelper.Deserialize<T>(orgStr);
+                return receiptresult;
+            }
+            catch (Exception exception)
+            {
+                LogHelper.Log(exception);
+                return default(T);
+            }
         }
 
         /// <summary>
