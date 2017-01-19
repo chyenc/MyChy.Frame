@@ -30,6 +30,7 @@ namespace MyChy.Frame.Common
 
         public static string ImageServer = AppSettingsName<string>("ImageServer");
 
+        public static string TemplatePath = AppSettingsName<string>("TemplatePath");
 
     }
 }
