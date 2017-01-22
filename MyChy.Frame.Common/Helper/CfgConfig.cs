@@ -16,20 +16,20 @@ namespace MyChy.Frame.Common.Helper
         /// <param name="file">CFG/INI</param>
         /// <param name="section">模块</param>
         /// <returns></returns>
-        public static T Reader<T>(string file, string section) where T : class
+        public static T Reader<T>(string file, string section) where T : new()
         {
             try
             {
                 var files = IoFiles.GetFileMapPath(file);
                 var config = Configuration.LoadFromFile(files);
                 var sections = config[section];
-                return sections == null ? default(T) : config[section].CreateObject<T>();
+                return sections == null ? default(T) : config[section].ToObject<T>();// .CreateObject<T>();
             }
             catch (Exception exception)
             {
                 LogHelper.Log(exception);
             }
-            return null;
+            return default(T);
         }
 
         /// <summary>

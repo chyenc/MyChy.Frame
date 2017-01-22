@@ -18,5 +18,8 @@ namespace MyChy.Frame.Common.Redis
 
         public int DefaultDatabase { get; set; }
 
+        public bool IsWebCache { get; set; }
+
+
     }
 }

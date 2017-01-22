@@ -73,7 +73,7 @@ namespace MyChy.Frame.Test
 
             }
 
-            RedisServer.SetDayAddCache(key, mobile, true,"yyyy-MM-d");
+            RedisServer.SetDayAddCache(key, mobile, true);
 
             for (int i = 0; i < 100000; i++)
             {
