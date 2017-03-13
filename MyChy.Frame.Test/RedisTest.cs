@@ -95,7 +95,22 @@ namespace MyChy.Frame.Test
         public void HashTest()
         {
 
+            var key1 = "ProductServer_ShowProductStocksCount-";
+            RedisServer.HashDayAddCache(key1,"123",100);
+            var ss13 = RedisServer.HashDayGetCache<long>(key1, "1231", -999);
 
+            var ss = RedisServer.HashDayGetCache<long>(key1, "123", 0);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            RedisServer.HashDayAddCache(key1, "123", 15);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            ss = RedisServer.HashDecrementDayCache(key1, "123", 1);
+            ss = RedisServer.HashDayGetCache<long>(key1, "123", 0);
 
             var key = "Hash";
             var ss1 = RedisServer.HashGetCache<long>(key, "1",-1);
