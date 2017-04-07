@@ -32,5 +32,12 @@ namespace MyChy.Frame.Common
 
         public static string TemplatePath = AppSettingsName<string>("TemplatePath");
 
+        public static readonly int WinXinId = AppSettingsName<int>("WeiXinId", 1);
+
+        //public static string DefualtWebSite = WebConfig.AppSettingsName<string>("DefualtWebSite");
+
+        public static readonly string WeiXinDesKey = WebConfig.AppSettingsName<string>("WeiXinDesKey", "46$6d3fg");
+
+
     }
 }
