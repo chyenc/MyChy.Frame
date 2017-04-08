@@ -9,6 +9,26 @@ namespace MyChy.Frame.Common.Helper
     public static class WebExtends
     {
         #region 转换成URL参数
+
+        /// <summary>
+        /// 转换成URL参数
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        public static string ToQueryString(this IDictionary<string, string> dictionary)
+        {
+            var sb = new StringBuilder();
+            foreach (var key in dictionary.Keys)
+            {
+                var value = dictionary[key];
+                if (value != null)
+                {
+                    sb.Append(key + "=" + value + "&");
+                }
+            }
+            return sb.ToString().TrimEnd('&');
+        }
+
         /// <summary>
         /// 转换成URL参数
         /// </summary>
