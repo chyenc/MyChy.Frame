@@ -3,12 +3,43 @@ using System.Collections.Generic;
 using System.Globalization;
 using MyChy.Frame.Common.Redis;
 using NUnit.Framework;
+using MyChy.Frame.Common;
 
 namespace MyChy.Frame.Test
 {
     [TestFixture]
     public class RedisTest
     {
+        [Test]
+        public void WebConfigTest()
+        {
+            var files1 = "MyChy.";
+            var file = "F:\\MyChy\\VisualStudio\\Demo\\MyChy.Core.Web\\MyChy.Core.Web\\bin\\Debug\\netcoreapp1.1\\MyChy.Core.Data.dll";
+            var ss = file.LastIndexOf("\\");
+            if (ss > 0)
+            {
+                var files = file.Substring(ss+1);
+
+                if (files.Contains(files1))
+                {
+                    ss = 1;
+                }
+            }
+
+
+        ///    var ss = "asdfafd";
+            var key = "123";
+            var result = WebCache.GetCache<string>(key);
+            if (string.IsNullOrEmpty(result))
+            {
+                WebCache.SetCache(key, ss,60);
+            }
+
+            result = WebCache.GetCache<string>(key);
+
+
+        }
+
         [Test]
         public void Run()
         {
@@ -19,12 +50,12 @@ namespace MyChy.Frame.Test
             RedisServer.StringSetCache("11", "asdfasdf");
             var ss = RedisServer.StringGetCache<string>("11");
             //RedisServer.Remove("11");
-           // ss = RedisServer.StringGetCache<string>("11");
-          var time = DateTime.Now;
+            // ss = RedisServer.StringGetCache<string>("11");
+            var time = DateTime.Now;
 
             var s = RedisServer.ExistsKey("11");
 
-           
+
             RedisServer.StringDaySetCache("21", time);
             time = RedisServer.StringGetCache<DateTime>("21");
 
@@ -38,19 +69,19 @@ namespace MyChy.Frame.Test
             ts1.id = 2;
             RedisServer.StringSetCache("31", ts1);
             var ts2 = RedisServer.StringGetCache<Tests>("31");
-           
-                        //long xx = 0;
 
-                        // xx = RedisServer.StringIncrement("asdf1", 10);
-                        xx = RedisServer.Increment("asdf11");
+            //long xx = 0;
+
+            // xx = RedisServer.StringIncrement("asdf1", 10);
+            xx = RedisServer.Increment("asdf11");
             xx = RedisServer.Increment("asdf11");
             xx = RedisServer.Increment("asdf11");
             xx = RedisServer.StringGetCache<long>("asdf11");
-            xx = RedisServer.Increment("asdf11",100);
+            xx = RedisServer.Increment("asdf11", 100);
             xx = RedisServer.Increment("asdf11");
             xx = RedisServer.StringGetCache<long>("asdf11");
             xx = RedisServer.Increment("asdf11");
-          
+
 
         }
 
@@ -68,7 +99,7 @@ namespace MyChy.Frame.Test
 
             if (!ss1)
             {
-                RedisServer.SetDayAddCache(key, mobile,true);
+                RedisServer.SetDayAddCache(key, mobile, true);
                 ss1 = RedisServer.SetDayContainsCache(key, mobile);
 
             }
@@ -83,11 +114,11 @@ namespace MyChy.Frame.Test
                 {
                     RedisServer.SetDayAddCache(key, mobile);
                 }
-                ss = ss+ 1;
+                ss = ss + 1;
             }
 
 
-           
+
         }
 
 
@@ -96,7 +127,7 @@ namespace MyChy.Frame.Test
         {
 
             var key1 = "ProductServer_ShowProductStocksCount-";
-            RedisServer.HashDayAddCache(key1,"123",100);
+            RedisServer.HashDayAddCache(key1, "123", 100);
             var ss13 = RedisServer.HashDayGetCache<long>(key1, "1231", -999);
 
             var ss = RedisServer.HashDayGetCache<long>(key1, "123", 0);
@@ -113,7 +144,7 @@ namespace MyChy.Frame.Test
             ss = RedisServer.HashDayGetCache<long>(key1, "123", 0);
 
             var key = "Hash";
-            var ss1 = RedisServer.HashGetCache<long>(key, "1",-1);
+            var ss1 = RedisServer.HashGetCache<long>(key, "1", -1);
             if (ss1 == -1)
             {
                 RedisServer.HashAddCache(key, "1", 0);
@@ -195,7 +226,7 @@ namespace MyChy.Frame.Test
                 RedisServer.SortedAddCache(key, i.ToString(), i);
             }
             var list = RedisServer.SortedSetRangeByRankDescendingCache(key, 0, 5);
-            var ss= RedisServer.SortedSetIncrementCache(key,"1",100 );
+            var ss = RedisServer.SortedSetIncrementCache(key, "1", 100);
             ss = RedisServer.SortedSetIncrementCache(key, "2", 10);
 
             ss = RedisServer.SortedSetIncrementCache(key, "5", 2);

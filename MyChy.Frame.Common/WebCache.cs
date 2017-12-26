@@ -21,8 +21,9 @@ namespace MyChy.Frame.Common
 
         static WebCache()
         {
+            var WebCacheConfig = WebConfig.AppSettingsName<string>("WebCacheConfig", "config/WebCache.cfg");
             if (Config != null) return;
-            Config = CfgConfig.Reader<WebCacheConfig>("config/WebCache.cfg", "Cache");
+            Config = CfgConfig.Reader<WebCacheConfig>(WebCacheConfig, "Cache");
             if (Config==null||Config.CacheMinute==0)
             {
                 Config = new WebCacheConfig { IsCache = false };

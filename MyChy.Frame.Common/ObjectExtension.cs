@@ -115,5 +115,19 @@ namespace MyChy.Frame.Common
 
         #endregion
 
+        /// <summary>
+        /// 自动截取字符串
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string ToSubQuantity(this string val, int length = 20)
+        {
+            if (val.Length>length)
+            {
+                val = val.Substring(0, length);
+            }
+            return val;
+        }
     }
 }

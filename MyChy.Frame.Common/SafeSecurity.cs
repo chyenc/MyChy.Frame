@@ -127,10 +127,10 @@ namespace MyChy.Frame.Common
         }
 
 
-        public static string SHA1(string strText)
-        {
-            return FormsAuthentication.HashPasswordForStoringInConfigFile(strText, "SHA1");
-        }
+        //public static string SHA1(string strText)
+        //{
+        //    return FormsAuthentication.HashPasswordForStoringInConfigFile(strText, "SHA1");
+        //}
 
         /// <summary>
         /// SHA1加密
