@@ -154,7 +154,10 @@ namespace MyChy.Frame.Common.Helper
             IDictionary<string, string> result = null;
             try
             {
-                var xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument
+                {
+                    XmlResolver = null
+                };
                 xmlDoc.LoadXml(xml);
                 var selectSingleNode = xmlDoc.SelectSingleNode("xml");
                 if (selectSingleNode != null)

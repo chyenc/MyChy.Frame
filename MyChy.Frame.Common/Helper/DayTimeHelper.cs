@@ -59,10 +59,15 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static bool CheckTicks(long ticks, int minutes = 10)
         {
+      
             var unixticks = ticks;
             if (ticks < 621356256000000000)
             {
                 if (ticks.ToString().Length > 16)
+                {
+                    ticks = (ticks * 10000) + 621356256000000000;
+                }
+                if (ticks.ToString().Length > 12)
                 {
                     ticks = (ticks * 10000) + 621356256000000000;
                 }
@@ -71,8 +76,16 @@ namespace MyChy.Frame.Common.Helper
                     ticks = (ticks * 10000*1000) + 621356256000000000;
                 }
             }
-            var datetime = new DateTime(ticks);
-            return (datetime <= DateTime.Now.AddMinutes(minutes) && datetime >= DateTime.Now.AddMinutes(0 - minutes));
+            try
+            {
+                var datetime = new DateTime(ticks);
+                return (datetime <= DateTime.Now.AddMinutes(minutes) && datetime >= DateTime.Now.AddMinutes(0 - minutes));
+            }
+            catch (Exception exception)
+            {
+                LogHelper.Log(exception);
+            }
+            return false;
         }
 
 

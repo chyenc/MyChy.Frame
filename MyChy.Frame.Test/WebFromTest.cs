@@ -24,5 +24,24 @@ namespace MyChy.Frame.Test
             var postDataStr = dictionary.ToQueryString();
             var requset = WebHelper.WebFormPost("http://hyinvite.21move.net/api/BindingUnbundling/", postDataStr);
         }
+
+
+
+        [Test]
+        public void Demo()
+        {
+            var dictionary = new Dictionary<string, string>
+            {
+                {"Encrypt","213423424"},
+                {"Sign","234234"},
+            };
+            var postDataStr = dictionary.ToQueryString();
+            string CustomerUrls = "http://192.168.16.151:58548/api/Values/abc";
+
+            var requset = WebHelper.WebFormPost(CustomerUrls, postDataStr);
+
+            //var encrypt = StringHelper.Deserialize<ResultBaseModel>(requset);
+
+        }
     }
 }

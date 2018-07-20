@@ -20,6 +20,12 @@ namespace MyChy.Frame.Test
         public void Run()
         {
             DayTimeHelper.CheckTicks(1476429498);
+
+            DayTimeHelper.CheckTicks(1515727650055);
+
+
+            DayTimeHelper.CheckTicks(DateTime.Now.Ticks);
+
             double s = (double)1476417251*1000;
             var log = DateTime.Now.Ticks - 621356256000000000;
             var s1s=log - s;
