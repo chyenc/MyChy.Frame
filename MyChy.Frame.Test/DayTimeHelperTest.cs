@@ -19,6 +19,9 @@ namespace MyChy.Frame.Test
         [Test]
         public void Run()
         {
+
+           var ss1=DayTimeHelper.ChangeTicks(1536904863000);
+
             DayTimeHelper.CheckTicks(1476429498);
 
             DayTimeHelper.CheckTicks(1515727650055);

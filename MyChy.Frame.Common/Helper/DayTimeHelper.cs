@@ -46,6 +46,22 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static DateTime ChangeTicks(long ticks)
         {
+            var unixticks = ticks;
+            if (ticks < 621356256000000000)
+            {
+                if (ticks.ToString().Length > 16)
+                {
+                    ticks = (ticks * 10000) + 621356256000000000;
+                }
+                if (ticks.ToString().Length > 12)
+                {
+                    ticks = (ticks * 10000) + 621356256000000000;
+                }
+                else
+                {
+                    ticks = (ticks * 10000 * 1000) + 621356256000000000;
+                }
+            }
             var datetime = new DateTime(ticks);
             return datetime;
         }
@@ -87,6 +103,8 @@ namespace MyChy.Frame.Common.Helper
             }
             return false;
         }
+
+ 
 
 
         /// <summary>
