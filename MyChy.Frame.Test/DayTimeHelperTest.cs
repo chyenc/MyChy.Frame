@@ -19,15 +19,24 @@ namespace MyChy.Frame.Test
         [Test]
         public void Run()
         {
+          var time2 = new DateTime(1970, 1, 1,8,0,0);
+          var time= time2.AddMilliseconds(446400000000);
 
-           var ss1=DayTimeHelper.ChangeTicks(1536904863000);
+            
+ time = time2.AddMilliseconds(1537128961000);
+
+
+            var ss1=DayTimeHelper.ChangeTicks(446400000000);
+
+            ss1 = DayTimeHelper.ChangeTicks(DateTime.Now.Ticks);
 
             DayTimeHelper.CheckTicks(1476429498);
 
             DayTimeHelper.CheckTicks(1515727650055);
 
+           
 
-            DayTimeHelper.CheckTicks(DateTime.Now.Ticks);
+                        DayTimeHelper.CheckTicks(DateTime.Now.Ticks);
 
             double s = (double)1476417251*1000;
             var log = DateTime.Now.Ticks - 621356256000000000;

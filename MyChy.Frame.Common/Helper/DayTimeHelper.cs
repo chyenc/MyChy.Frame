@@ -46,23 +46,30 @@ namespace MyChy.Frame.Common.Helper
         /// <returns></returns>
         public static DateTime ChangeTicks(long ticks)
         {
-            var unixticks = ticks;
-            if (ticks < 621356256000000000)
+            //var unixticks = ticks;
+            var datetime = DateTime.Now;
+            var leg = ticks.ToString().Length;
+            if (leg <= 16)
+            {
+                var time2 = new DateTime(1970, 1, 1, 8, 0, 0);
+                datetime = time2.AddMilliseconds(ticks);
+            }
+            else if (ticks < 621356256000000000)
             {
                 if (ticks.ToString().Length > 16)
                 {
                     ticks = (ticks * 10000) + 621356256000000000;
                 }
-                if (ticks.ToString().Length > 12)
-                {
-                    ticks = (ticks * 10000) + 621356256000000000;
-                }
-                else
-                {
-                    ticks = (ticks * 10000 * 1000) + 621356256000000000;
-                }
+                //if (ticks.ToString().Length > 12)
+                //{
+                //    ticks = (ticks * 10000) + 621356256000000000;
+                //}
+                datetime = new DateTime(ticks);
             }
-            var datetime = new DateTime(ticks);
+            else
+            {
+                datetime = new DateTime(ticks);
+            }
             return datetime;
         }
 
@@ -77,24 +84,9 @@ namespace MyChy.Frame.Common.Helper
         {
       
             var unixticks = ticks;
-            if (ticks < 621356256000000000)
-            {
-                if (ticks.ToString().Length > 16)
-                {
-                    ticks = (ticks * 10000) + 621356256000000000;
-                }
-                if (ticks.ToString().Length > 12)
-                {
-                    ticks = (ticks * 10000) + 621356256000000000;
-                }
-                else
-                {
-                    ticks = (ticks * 10000*1000) + 621356256000000000;
-                }
-            }
             try
             {
-                var datetime = new DateTime(ticks);
+                var datetime = ChangeTicks(ticks);
                 return (datetime <= DateTime.Now.AddMinutes(minutes) && datetime >= DateTime.Now.AddMinutes(0 - minutes));
             }
             catch (Exception exception)

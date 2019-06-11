@@ -33,7 +33,9 @@ namespace MyChy.Frame.Common.Helper
         public static bool SessionCodeCheck(string sessionName, string value)
         {
             var val = HttpContext.Current.Session[sessionName].To<string>();
-            return value.ToUpper() == val;
+            var result= value.ToUpper() == val;
+            HttpContext.Current.Session[sessionName] = StringHelper.GenerateRandomCode(8);
+            return result;
         }
 
 
@@ -68,8 +70,9 @@ namespace MyChy.Frame.Common.Helper
         {
             if (httpContext.Session == null) return false;
             var val = httpContext.Session[sessionName].To<string>();
-            return value.ToUpper() == val;
-
+            var result=value.ToUpper() == val;
+            httpContext.Session[sessionName] = StringHelper.GenerateRandomCode(8);
+            return result;
         }
 
 
